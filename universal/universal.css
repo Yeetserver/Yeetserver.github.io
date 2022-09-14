@@ -1,0 +1,13 @@
+:root {
+    --darkmode: rgb(25, 25, 25);
+    --whitemode: rgb(255, 255, 255);
+    --darkmode_text: rgb(255, 255, 255);
+    --whitemode_text: rgb(25, 25, 25);
+    --bg: var(--darkmode);
+    --fg: var(--darkmode_text)
+}
+
+body {
+    color: var(--fg);
+    background-color: var(--bg);
+}

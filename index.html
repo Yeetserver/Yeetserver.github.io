@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <script src="/universal/universal.js"></script>
+    <link rel="stylesheet" href="/universal/universal.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
+    <link rel="shortcut icon" type="image/x-icon" href="./images/index-icon.png"/>
+    <link rel="stylesheet" href="/style/index.css"/>
+    <meta property="og:type" content="Website">
+    <meta property="og:title" content="Yeetserver Website">
+    <meta property="og:description" content="Die Offizielle Website des Yeetserver's"/>
+    <meta property="og:image" content="https://yeetserver.github.io/images/index-icon.png"/>
+    <script src="/scripts/index.js"></script>
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+    <title>Yeetserver</title>
+</head>
+<body onload="startup()">
+
+<button class="appearance-button-class" id="appearance-button" onclick="appearanceButton()">Whitemode</button>
+<button class="delete-all-cookies-class" id="delete-cookies-button" onclick="deleteAllCookies()">Alle Cookies löschen</button>
+<button class="show-cookies-class" id="show-cookies-button" onclick="alert(document.cookie)">Gespeicherte Cookies anzeigen</button>
+
+<div class="random-emoji-class">
+    <p>Dies ist die offizielle Website des Yeetserver's.
+    <br>Leider ist sie aktuell nicht fertiggestellt. 👷‍♂️🚧
+    </p>
+    <label id="random-emoji-label" class="random-emoji-label-class"></label>
+    <script>
+    const myArray = [
+    "😀",
+    "🤨",
+    "😥",
+    "😮",
+    "😨",
+    "😵",
+    "😦",
+    "🤫"
+    ];
+    var randomItem = myArray[Math.floor(Math.random()*myArray.length)];
+        document.getElementById('random-emoji-label').innerHTML = `Zufälliges Emoji ${randomItem}`;
+    </script>
+</div>
+
+<div class="calcClass">
+    <b>Simpler Rechenapperat ➡ &nbsp; </b>
+    <button name="calcButton" onclick="calculator()" class="calcButtonClass">🧮</button>
+</div>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+    <div id="overlay">
+    <div id="text">Diese Seite benutzt Cookies um getroffene Einstellungen zu Speichern<br>
+    <a href="/policy">Mehr Informationen<br></a>
+    <button name="hidecookiebanner" onclick="off()">OK</button>
+</div>
+
+</body>
+</html>
