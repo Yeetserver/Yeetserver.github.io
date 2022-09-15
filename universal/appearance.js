@@ -1,19 +1,21 @@
 function changeAppearance(appearance) {
-    const mode_button = document.getElementById("appearance-button");
     if (appearance == "darkmode") {
-    document.documentElement.style.setProperty('--background_appearance', 'hsl(0, 0%, 12%)');
-    document.documentElement.style.setProperty('--foreground_appearance', 'hsl(0, 0%, 100%)');
-    mode_button.firstChild.data = "Darkmode";
+    document.documentElement.style.setProperty('--background_appearance', 'rgb(32, 32, 32)');
+    document.documentElement.style.setProperty('--foreground_appearance', 'rgb(255, 255, 255)');
     }
     else if (appearance == "whitemode") {
-        document.documentElement.style.setProperty('--background_appearance', 'hsl(0, 0%, 100%)');
-        document.documentElement.style.setProperty('--foreground_appearance', 'hsl(0, 0%, 0%)');
-    mode_button.firstChild.data = "Whitemode";
+        document.documentElement.style.setProperty('--background_appearance', 'rgb(255, 255, 255)');
+        document.documentElement.style.setProperty('--foreground_appearance', 'rgb(0, 0, 0)');
     }
-    else if (appearance == "colorful") {
-        document.documentElement.style.setProperty('--background_appearance', 'hsl(32, 100%, 48%)');
-        document.documentElement.style.setProperty('--foreground_appearance', 'hsl(0, 0%, 20%)');
-        mode_button.firstChild.data = "Colorful";
+    else if (appearance == "sunrise") {
+        document.documentElement.style.setProperty('--background_appearance', 'rgb(40, 40, 40)');
+        document.documentElement.style.setProperty('--foreground_appearance', 'rgb(248, 149, 0)');
+    }
+    else if (appearance == "random") {
+        function getRandomInt(max) {
+            return Math.floor(Math.random() * max)}
+        document.documentElement.style.setProperty('--background_appearance', `rgb(${getRandomInt(255)}, ${getRandomInt(255)}, ${getRandomInt(255)})`);
+        document.documentElement.style.setProperty('--foreground_appearance', `rgb(${getRandomInt(255)}, ${getRandomInt(255)}, ${getRandomInt(255)})`);
     }
 }
 
@@ -25,8 +27,13 @@ function appearanceButton() {
 
 function loadAppearance() {
     changeAppearance(getCookie("appearance"));
+    
     if (getCookie("visited") !== "true") {
+        document.cookie = `appearance=darkmode`;
         on()
+    }
+    else {
+        selectedValue = document.getElementById("appearances").value = getCookie("appearance");
     }
 }
 

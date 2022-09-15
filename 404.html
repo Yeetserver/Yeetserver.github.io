@@ -17,7 +17,7 @@
 
 
 <div class="item">
-    <img src="/images/404-error.png" alt="404-error" style="width: 100%;"/>
+    <img src="/images/404-error.png" alt="404-error" style="width: 75%;"/>
     <p style="font-size: 150%;" id="text"></p>
 </div>
 
@@ -39,9 +39,9 @@
     url = url.replace(".html", "");
     url = url.replace("http://", "");
     url = url.replace("https://", "");
-    if (url === "yeetserver.github.io/404") {
+    if (url !== "yeetserver.github.io/404") {
         document.getElementById("text").innerHTML =
-        `Hier gibt es nichts zu sehen 👻`;
+        `Grüß dich, Fremder! 😀`;
         document.title = `${url}`;
     }
     else {

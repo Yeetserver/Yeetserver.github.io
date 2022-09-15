@@ -1,7 +1,8 @@
 :root {
-    --background_appearance: hsl(0, 0%, 12%);
-    --foreground_appearance:hsl(0, 0%, 100%);
-    --button_appearance: hsl(0, 0%, 100%);
+    --background_appearance: rgb(32, 32, 32);
+    --foreground_appearance:rgb(255, 255, 255);
+    --button_appearance: rgb(255, 255, 255);
+    --test: rgb(248, 149, 0);
 }
 
 body {
