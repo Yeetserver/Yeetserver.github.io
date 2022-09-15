@@ -11,17 +11,9 @@ function changeAppearance(appearance) {
     mode_button.firstChild.data = "Whitemode";
     }
     else if (appearance == "colorful") {
-        document.documentElement.style.setProperty('--background_appearance', 'hsl(0, 0%, 60%)');
+        document.documentElement.style.setProperty('--background_appearance', 'hsl(32, 100%, 48%)');
         document.documentElement.style.setProperty('--foreground_appearance', 'hsl(0, 0%, 20%)');
         mode_button.firstChild.data = "Colorful";
-    }
-}
-
-function loadAppearance() {
-    changeAppearance(getCookie("appearance"));
-    if (getCookie("visited") !== "true") {
-        on()
-        alert(getCookie("appearance"))
     }
 }
 
@@ -29,6 +21,13 @@ function appearanceButton() {
     var selectedValue = document.getElementById("appearances").value;
     document.cookie = `appearance=${selectedValue}`;
     changeAppearance(`${selectedValue}`)
+}
+
+function loadAppearance() {
+    changeAppearance(getCookie("appearance"));
+    if (getCookie("visited") !== "true") {
+        on()
+    }
 }
 
 function start() {
