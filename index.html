@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <script src="/universal/universal.js"></script>
+    <script defer src="/universal/appearance.js"></script>
+    <script defer src="/universal/universal.js"></script>
     <link rel="stylesheet" href="/universal/universal.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
     <link rel="shortcut icon" type="image/x-icon" href="./images/index-icon.png"/>
@@ -16,9 +17,16 @@
 </head>
 <body onload="startup()">
 
-<button class="appearance-button-class" id="appearance-button" onclick="appearanceButton()">Whitemode</button>
 <button class="delete-all-cookies-class" id="delete-cookies-button" onclick="deleteAllCookies()">Alle Cookies löschen</button>
 <button class="show-cookies-class" id="show-cookies-button" onclick="alert(document.cookie)">Gespeicherte Cookies anzeigen</button>
+
+<div class="appearance-dropdown">
+    <select onchange="appearanceButton()" id="appearances">
+        <option value="darkmode">Darkmode</option>
+        <option value="whitemode">Whitemode</option>
+        <option value="colorful">Colorful</option>
+    </select>
+</div>
 
 <div class="random-emoji-class">
     <p>Dies ist die offizielle Website des Yeetserver's.

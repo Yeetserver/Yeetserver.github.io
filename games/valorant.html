@@ -2,7 +2,9 @@
 <html lang="de">
 <head>
     <script src="/universal/universal.js"></script>
+    <script src="/universal/appearance.js"></script>
     <link rel="stylesheet" href="/universal/universal.css">
+    <link rel="" href="/universal/jsonscript.js">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
     <link rel="shortcut icon" type="image/x-icon" href="./images/index-icon.png"/>
     <meta property="og:type" content="Website">
@@ -14,10 +16,12 @@
     <title>Yeetserver</title>
 <body onload="startup()">
 
-<p style="font-size: 150%;" id="text">Placeholder</p>
-<button id="random_map" onclick="randomMap()">Random Map</button>
-<button id="random_agent" onclick="randomAgent()">Random Agent</button>
-<button id="random_weapon" onclick="randomWeapon()">Random Weapon</button>
+<p style="font-size: 150%;" id="displayText"></p>
+<div id="buttons" class="buttonsClass">
+    <button id="random_map" onclick="randomMap()">Random Map</button>
+    <button id="random_agent" onclick="randomAgent()">Random Agent</button>
+    <button id="random_weapon" onclick="randomWeapon()">Random Weapon</button>
+</div>
 
 </body>
 </html>

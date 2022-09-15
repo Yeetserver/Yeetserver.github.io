@@ -1,22 +1,3 @@
-function appearanceButton() {
-    const mode_button = document.getElementById("appearance-button");
-    if (mode_button.firstChild.data == "Darkmode") 
-    {
-        document.cookie = "mode=0";
-        changeAppearance(0)
-    }
-    else 
-    {
-        document.cookie = "mode=1";
-        changeAppearance(1)
-    }}
-function start() {
-    changeAppearance(getCookie("mode"));
-    if (getCookie("visited") !== "true") {
-        on()
-    }
-}
-
 function calculator() {
     var calculation = prompt("Rechnung eingeben")
     try {

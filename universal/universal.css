@@ -1,13 +1,10 @@
 :root {
-    --darkmode: rgb(25, 25, 25);
-    --whitemode: rgb(255, 255, 255);
-    --darkmode_text: rgb(255, 255, 255);
-    --whitemode_text: rgb(25, 25, 25);
-    --bg: var(--darkmode);
-    --fg: var(--darkmode_text)
+    --background_appearance: hsl(0, 0%, 12%);
+    --foreground_appearance:hsl(0, 0%, 100%);
+    --button_appearance: hsl(0, 0%, 100%);
 }
 
 body {
-    color: var(--fg);
-    background-color: var(--bg);
+    color: var(--foreground_appearance);
+    background-color: var(--background_appearance);
 }
