@@ -1,15 +1,20 @@
 function changeAppearance(appearance) {
+    document.cookie = `appearance=${appearance}`;
     if (appearance == "darkmode") {
     document.documentElement.style.setProperty('--background_appearance', 'rgb(32, 32, 32)');
     document.documentElement.style.setProperty('--foreground_appearance', 'rgb(255, 255, 255)');
     }
     else if (appearance == "whitemode") {
-        document.documentElement.style.setProperty('--background_appearance', 'rgb(255, 255, 255)');
+        document.documentElement.style.setProperty('--background_appearance', 'rgb(248, 246, 237)');
         document.documentElement.style.setProperty('--foreground_appearance', 'rgb(0, 0, 0)');
     }
     else if (appearance == "sunrise") {
-        document.documentElement.style.setProperty('--background_appearance', 'rgb(40, 40, 40)');
+        document.documentElement.style.setProperty('--background_appearance', 'rgb(32, 32, 32)');
         document.documentElement.style.setProperty('--foreground_appearance', 'rgb(248, 149, 0)');
+    }
+    else if (appearance == "terminal") {
+        document.documentElement.style.setProperty('--background_appearance', 'rgb(0, 0, 0)');
+        document.documentElement.style.setProperty('--foreground_appearance', 'rgb(65, 200, 0)');
     }
     else if (appearance == "random") {
         function getRandomInt(max) {
@@ -17,29 +22,35 @@ function changeAppearance(appearance) {
         document.documentElement.style.setProperty('--background_appearance', `rgb(${getRandomInt(255)}, ${getRandomInt(255)}, ${getRandomInt(255)})`);
         document.documentElement.style.setProperty('--foreground_appearance', `rgb(${getRandomInt(255)}, ${getRandomInt(255)}, ${getRandomInt(255)})`);
     }
+    else {
+        changeAppearance("darkmode");
+    }
 }
 
 function appearanceButton() {
     var selectedValue = document.getElementById("appearances").value;
-    document.cookie = `appearance=${selectedValue}`;
     changeAppearance(`${selectedValue}`)
 }
 
 function loadAppearance() {
     changeAppearance(getCookie("appearance"));
-    
     if (getCookie("visited") !== "true") {
         document.cookie = `appearance=darkmode`;
         on()
     }
-    else {
-        selectedValue = document.getElementById("appearances").value = getCookie("appearance");
-    }
+    try {document.getElementById("appearances").value = getCookie("appearance");}
+    catch (e) {};
+
 }
 
-function start() {
-    changeAppearance(getCookie("appearance"));
-    if (getCookie("visited") !== "true") {
-        on()
-    }
+
+function on() {
+    try {document.getElementById("overlay").style.display = "block";}
+    catch (e) {}
+}
+
+function off() {
+    try {document.getElementById("overlay").style.display = "none";}
+    catch (e) {}
+    document.cookie = "visited=true";
 }
