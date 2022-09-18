@@ -34,13 +34,14 @@ function randomChallenge () {
     const challenges = ["Nur das Messer benutzen¹²", "Nur Zweitwaffen benutzen¹", "Nur Hauptwaffen benutzen¹", "Keine Waffen aufsammeln",
     `Keine Waffen über ${randomInt(1, 50)*100} ¤ kaufen²`, `Keine Waffen unter ${randomInt(1, 50)*100} ¤ kaufen²`,
     "Nur aufgesammelte Waffen benutzen²", "Nur Zweitwaffen aufsammeln²", "Nicht Springen", "Nur Schleichen⁴", "Keine Fähigkeiten einsetzen",
-    "Campen³", "Pushen³", "Nur Rückwärts laufen", "Nur Crouchen⁴", "Einen Gegner Messern¹²", "Nur Rennen⁴"];
+    "Campen³", "Pushen³", "Nur Rückwärts laufen", "Nur Crouchen⁴", "Einen Gegner Messern¹²", "Nur Rennen⁴", "Nur Waffen vom Gegner benutzen¹²",
+    "Nur auf die Füße zielen", "Einmal um die Map laufen³", "Nach A gehen³⁵", "Nach B gehen³⁵", "Nach C gehen³⁵"];
     function duplicateExists (symbol) {if (!randomChallenges.find(a =>a.includes(symbol)) + !randomChallenge.includes(symbol)) {return true} else {return false}}
     for (let i = 1; i <= count; i++) {
         var random = Math.floor(Math.random() * challenges.length);
         var randomChallenge = challenges[random];
         if (!randomChallenges.includes(randomChallenge) ) {
-            if (duplicateExists("¹") && duplicateExists("²") && duplicateExists("³") && duplicateExists("⁴")) {
+            if (duplicateExists("¹") && duplicateExists("²") && duplicateExists("³") && duplicateExists("⁴") && duplicateExists("⁵")) {
                 randomChallenges.push(randomChallenge);
             }
             else {
@@ -58,6 +59,7 @@ function randomChallenge () {
         item = item.replace("²", "");
         item = item.replace("³", "");
         item = item.replace("⁴", "");
+        item = item.replace("⁵", "");
         randomChallenges[i] = item;
     }
 
