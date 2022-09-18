@@ -1,5 +1,11 @@
 const none = null
 
+function readJSON(filename) {
+    $(function() {
+    $.getJSON(filename, function(data) {
+        return data
+})})}
+
 function setCookie(name, value, exdays) {
     if (exdays == undefined || exdays == null || exdays == none) {
         const d = new Date();
@@ -42,19 +48,16 @@ function deleteAllCookies() {
         document.cookie = name + "=;expires=Thu, 01 Jan 2000 00:00:00 GMT";
 }}
 
-function on() {
-    document.getElementById("overlay").style.display = "block";
-}
-
-    function off() {
-    document.getElementById("overlay").style.display = "none";
-    document.cookie = "visited=true";
-}
-
-function random(multiplicator) {
-    return Math.round(Math.random * multiplicator)
-}
-
 function startup() {
     loadAppearance()
+}
+
+function* range(start, end) {
+    for (let i = start; i <= end; i++) {
+        yield i;
+    }
+}
+
+function randomInt(min, max) { // min and max included 
+    return Math.floor(Math.random() * (max - min + 1) + min)
 }
