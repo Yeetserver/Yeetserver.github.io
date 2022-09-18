@@ -41,7 +41,7 @@ function randomChallenge () {
         var random = Math.floor(Math.random() * challenges.length);
         var randomChallenge = challenges[random];
         if (!randomChallenges.includes(randomChallenge) ) {
-            if (duplicateExists("¹") && duplicateExists("²") && duplicateExists("³") && duplicateExists("⁴") && duplicateExists("⁵")) {
+            if (duplicateExists("¹") && duplicateExists("²") && duplicateExists("³") && duplicateExists("⁴") && duplicateExists("⁵") && duplicateExists("⁶")) {
                 randomChallenges.push(randomChallenge);
             }
             else {
@@ -60,6 +60,7 @@ function randomChallenge () {
         item = item.replace("³", "");
         item = item.replace("⁴", "");
         item = item.replace("⁵", "");
+        item = item.replace("⁶", "");
         randomChallenges[i] = item;
     }
 
