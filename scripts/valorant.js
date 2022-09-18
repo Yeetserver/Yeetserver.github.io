@@ -32,7 +32,7 @@ var count = 3;
 function randomChallenge () {
     var randomChallenges = [];
     const challenges = ["Nur das Messer benutzen¹²", "Nur Zweitwaffen benutzen¹", "Nur Hauptwaffen benutzen¹", "Keine Waffen aufsammeln²⁶",
-    `Keine Waffen über ${randomInt(1, 40)*100} ¤ kaufen²`, `Keine Waffen unter ${randomInt(1, 40)*100} ¤ kaufen²`,
+    `Nur Waffen über ${randomInt(1, 40)*100} ¤ kaufen²`, `Nur Waffen unter ${randomInt(1, 40)*100} ¤ kaufen²`,
     "Nur aufgesammelte Waffen benutzen²", "Nur Zweitwaffen aufsammeln²", "Nicht Springen", "Nur Schleichen⁴", "Keine Fähigkeiten einsetzen",
     "Campen³", "Pushen³", "Nur Rückwärts laufen", "Nur Crouchen⁴", "Einen Gegner Messern¹²", "Nur Rennen⁴", "Nur Waffen vom Gegner benutzen¹²⁶",
     "Nur auf die Füße zielen", "Einmal um die Map laufen³", "Nach A gehen³⁵", "Nach B gehen³⁵", "Nach C gehen³⁵"];
