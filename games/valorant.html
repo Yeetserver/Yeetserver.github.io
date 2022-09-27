@@ -4,18 +4,16 @@
     <script src="/universal/appearance.js"></script>
     <script src="/universal/universal.js"></script>
     <link rel="stylesheet" href="/universal/universal.css">
-    <link rel="" href="/universal/jsonscript.js">
+    <link rel="stylesheet" href="valorant.css">
+    <script src="/scripts/valorant.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
     <link rel="shortcut icon" type="image/x-icon" href="/images/index-icon.png"/>
-    <title>Valorant - Yeetserver</title>
     <meta property="og:type" content="Website">
     <meta property="og:title" content="Yeetserver Website">
     <meta property="og:description" content="Die Offizielle Website des Yeetserver's"/>
     <meta property="og:image" content="https://yeetserver.github.io/images/index-icon.png"/>
-    <script src="/scripts/valorant.js"></script>
-    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
-    <title>Yeetserver</title>
-<body onload="startup()">
+    <title>Valorant - Yeetserver</title>
+<body onload="startup()" onunload="deleteValorantData()">
 
 <div class="container">
     <a class="btn" id="random_map" onclick="randomMap()">Zufällige Karte</a>
@@ -27,74 +25,23 @@
     <a class="btn" id="random_challenge" onclick="randomChallenge()">Zufällige Herausforderungen</a>
 </div>
 
-<p class="displayText" id="displayText"></p>
+<div class="slidecontainer">
+    <label class="containerTitle">Einstellungen</label>
+    <label class="checkboxClass">
+        <input type="checkbox" id="use_sidearms" onchange="useSidearm()">
+        <label for="scales">Keine Zweitwaffe</label>
+        <span class="checkmark"></span>
+    </label>
+    <p id="difficultyValue">Schwierigkeit: Leicht</p>
+    <input type="range" min="1" max="3" value="1" class="slider" id="difficulty_slider" oninput="difficultySlider()">
+    <p id="countValue">Anzahl: 1</p>
+    <input type="range" min="1" max="3" value="1" class="slider" id="count_slider" oninput="countSlider()">
+</div>
 
+<div class="displayText">
+    <p id="displayText"></p>
+</div>
 
-<style>
-
-* {
-    padding: 0;
-    margin: 0;
-}
-
-.container {
-    color: var(--foreground_appearance);
-    background-color: var(--background_appearance);
-    border-block-start-color: var(--background_appearance);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 12vh;
-}
-
-a {
-    font-size: 1rem;
-    padding: 0.5rem 2rem;
-    text-transform: uppercase;
-}
-
-.btn {
-    text-decoration: none;
-    border: 1px solid rgb(146, 148, 248);
-    position: relative;
-    overflow: hidden;
-}
-
-.btn:hover {
-  box-shadow: 1px 1px 25px 10px rgba(146, 148, 248, 0.4);
-}
-
-.btn:before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-        120deg,
-        transparent,
-        rgba(146, 148, 248, 0.4),
-        transparent
-    );
-    transition: all 650ms;
-}
-
-.btn:hover:before {
-  left: 100%;
-}
-
-/* */
-
-.displayText {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 8vh;
-    margin-top: 25vh;
-    text-align: center;
-}
-</style>
 
 </body>
 </html>
