@@ -8,4 +8,5 @@
 body {
     color: var(--foreground_appearance);
     background-color: var(--background_appearance);
+    margin: 0;
 }
