@@ -5,7 +5,7 @@ function calculator() {
             var calculation = calculation.replace(",", ".")
         }
         const result = eval(calculation)
-        if (result === undefined || result === null) {
+        if (result == undefined || result == null) {
         } else {
         if (Number.isInteger(result)) {
             alert(`Ergebnis: ${result}`)
