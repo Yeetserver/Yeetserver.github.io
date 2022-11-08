@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <!-- Scripts & CSS -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
+    <link rel="stylesheet" href="/src/dependencies/appearance.css">
+    <script src="/src/dependencies/functions.js"></script>
+    <script src="/src/dependencies/cookies.js"></script>
+    <script defer src="/src/dependencies/appearance.js"></script>
+    <!-- Titlebar -->
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/images/index-icon.png"/>
+    <title>Yeetserver - Login</title>
+    <!-- Open Graph protocol -->
+    <meta property="og:type" content="Website">
+    <meta property="og:title" content="Yeetserver Website">
+    <meta property="og:description" content="Die Offizielle Website des Yeetserver's"/>
+    <meta property="og:image" content="https://yeetserver.github.io/assets/images/index-icon.png"/>
+    <!-- Website specific contents -->
+</head>
+<body onload="startup()">
+
+<div class="login">
+    <form class="loginform">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name"><br><br>
+        <label for="key">Key:</label>
+        <input type="text" id="key" name="key"><br><br>
+    </form>
+    <button onclick="register()">Register</button>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt facilis,
+    animi qui doloribus placeat repudiandae odio.
+    Vel blanditiis quisquam corrupti sequi est odio eligendi vero repudiandae?
+    Eveniet illo tempore dolor!</p>
+</div>
+
+</body>
+
+<style>
+body {
+padding: 0;
+margin: 2vh;
+}
+
+.login {
+    margin: auto;
+    width: 50%;
+    border: 3px solid green;
+    padding: 10px;
+}
+</style>
+
+<script defer type="text/javascript">
+    function register() {
+        if (document.getElementById("name").value != "" && document.getElementById("key").value != "")
+        console.info("Registerd client " + document.getElementById("name").value)
+        setCookie("CLIENT_NAME", document.getElementById("name").value)
+        var DatabaseKey = document.getElementById("key").value
+        setCookie("DBAKEYVAL", DatabaseKey)
+    }
+</script>
+</html>

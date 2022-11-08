@@ -1,18 +1,23 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <script src="/universal/appearance.js"></script>
-    <script src="/universal/universal.js"></script>
-    <link rel="stylesheet" href="/universal/universal.css">
+    <!-- Scripts & CSS -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
-    <link rel="shortcut icon" type="image/x-icon" href="./images/index-icon.png"/>
-    <link rel="stylesheet" href="/style/index.css"/>
-    <script src="/scripts/index.js"></script>
+    <link rel="stylesheet" href="/src/dependencies/appearance.css">
+    <script src="/src/dependencies/functions.js"></script>
+    <script src="/src/dependencies/cookies.js"></script>
+    <script defer src="/src/dependencies/appearance.js"></script>
+    <!-- Titlebar -->
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/images/index-icon.png"/>
+    <title>Yeetserver</title>
+    <!-- Open Graph protocol -->
     <meta property="og:type" content="Website">
     <meta property="og:title" content="Yeetserver Website">
     <meta property="og:description" content="Die Offizielle Website des Yeetserver's"/>
-    <meta property="og:image" content="https://yeetserver.github.io/images/index-icon.png"/>
-    <title>Yeetserver</title> 
+    <meta property="og:image" content="https://yeetserver.github.io/assets/images/index-icon.png"/>
+    <!-- Website specific contents -->
+    <link rel="stylesheet" href="src/style/index.css"/>
+    <script src="src/scripts/index.js"></script>
 </head>
 <body onload="startup()">
 
@@ -53,9 +58,9 @@
     <button name="calcButton" onclick="calculator()" class="calcButtonClass">🧮</button>
 </div>
 
-<br><a href="https://yeetserver.github.io/games/valorant">Yeetserver/Games</a>
-<br><a href="https://yeetserver.github.io/contributions">Yeetserver/Contributions</a>
-<br><a href="https://yeetserver.github.io/policy">Yeetserver/Policy</a>
+<br><a href="https://yeetserver.github.io/games">Yeetserver/Games</a>
+<br><a href="https://yeetserver.github.io/settings/contributions">Yeetserver/Contributions</a>
+<br><a href="https://yeetserver.github.io/settings/policy">Yeetserver/Policy</a>
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
     <div id="overlay">

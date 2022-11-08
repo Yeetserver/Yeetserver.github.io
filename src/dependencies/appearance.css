@@ -10,3 +10,17 @@ body {
     background-color: var(--background_appearance);
     margin: 0;
 }
+
+a:link {
+    text-decoration: none;
+    color: rgb(255, 217, 0);
+}
+a:visited {
+    color: rgb(255, 153, 0);
+}
+a:hover {
+    color: hotpink;
+}
+a:active {
+    color: hotpink;
+}

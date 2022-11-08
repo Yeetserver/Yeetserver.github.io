@@ -1,11 +1,3 @@
-const none = null
-
-function readJSON(filename) {
-    $(function() {
-    $.getJSON(filename, function(data) {
-        return data
-})})}
-
 function setCookie(name, value, exdays) {
     if (exdays == undefined || exdays == null) {
         const d = new Date();
@@ -36,7 +28,7 @@ function getCookie(cname) {
 }
 
 function deleteCookie(cookie) {
-        document.cookie = `${cookie}=; expires=Thu, 01 Jan 2000 00:00:00 UTC;`;
+    document.cookie = `${cookie}=; expires=Thu, 01 Jan 2000 00:00:00 UTC;`;
 }
     
 function deleteAllCookies() {
@@ -48,16 +40,3 @@ function deleteAllCookies() {
         document.cookie = name + "=;expires=Thu, 01 Jan 2000 00:00:00 GMT";
 }}
 
-function startup() {
-    loadAppearance()
-}
-
-function* range(start, end) {
-    for (let i = start; i <= end; i++) {
-        yield i;
-    }
-}
-
-function randomInt(min, max) { // min and max included 
-    return Math.floor(Math.random() * (max - min + 1) + min)
-}
