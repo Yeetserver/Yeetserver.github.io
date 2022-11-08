@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <!-- Scripts & CSS -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
+    <link rel="stylesheet" href="/src/dependencies/appearance.css">
+    <script src="/src/dependencies/functions.js"></script>
+    <script src="/src/dependencies/cookies.js"></script>
+    <script defer src="/src/dependencies/appearance.js"></script>
+    <!-- Titlebar -->
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/images/index-icon.png"/>
+    <title>RootsAssistent - Dashboard</title>
+    <!-- Open Graph protocol -->
+    <meta property="og:type" content="Website">
+    <meta property="og:title" content="Yeetserver Website">
+    <meta property="og:description" content="Die Offizielle Website des Yeetserver's"/>
+    <meta property="og:image" content="https://yeetserver.github.io/assets/images/index-icon.png"/>
+    <!-- Website specific contents -->
+    <link rel="stylesheet" href="/bot/style.css">
+    <script defer type="module" src="/bot/databasemodule.js"></script>
+</head>
+<body onloadeddata="startup()">
+
+<form class="console">
+    <h1>Konsole</h1>
+    <p>──────────────────────────────</p>
+
+    <label for="channel">KanalID:</label>
+    <input type="text" id="channel" name="channel"><br><br>
+    <label for="channel">Profilbild URL:</label>
+    <input type="text" id="pfpUrl" name="pfpUrl"><br><br>
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name"><br><br>
+    <label for="message">Nachricht:</label>
+    <input type="text" id="message" name="message"><br><br>
+    <input type="button" id="send" value="Senden">
+
+    <br><p>──────────────────────────────</p>
+
+    <label for="status">Status:</label>
+    <input type="text" id="status" name="status"><br><br>
+
+    <label for="statusdropdown">Aktivität:</label>
+    <select name="statusdropdown" id="statusdropdown">
+    <option value="0">Spielt -</option>
+    <option value="2">Hört - zu</option>
+    <option value="3">Schaut -</option>
+    <option value="5">Tritt an in -</option>
+    
+    </select><br><br>
+    <input type="button" id="update" value="Anwenden">
+    
+    <br><p>──────────────────────────────</p>
+</form>
+
+<div class="info">
+    <h1>Laufzeit</h1>
+    <p id="uptime">00:00 Stunden</p>
+</div>
+
+</body>
+</html>

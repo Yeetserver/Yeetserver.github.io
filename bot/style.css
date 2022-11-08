@@ -1,0 +1,16 @@
+body {
+    padding: 0;
+    margin: 2vh;
+    color: orange;
+}
+h1 {
+    font-size: x-large;
+}
+
+.console {
+    display: inline-block;
+}
+
+.info {
+    float: right;
+}
