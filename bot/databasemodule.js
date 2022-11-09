@@ -75,21 +75,6 @@ function show_pfps() {
   }
 }
 
-async function updateUptime(uptime) {
-    document.getElementById('uptime').innerHTML = uptime;
-};
-
-onValue(reference, (snapshot) => {
-  const uptime = snapshot.val().uptime;
-  if (uptime >= 3600000) {
-    updateUptime(Math.round((uptime/1000/60/60)*10)/10 + " Stunden")
-  }//hour
-  else {
-    updateUptime(Math.round((uptime/1000)*10)/10 + " Minuten")
-  }//minute
-}); // FUNKTIONIERT NICHT RICHTIG PROP
-
-
 onValue(reference, (snapshot) => {
   const enabled = snapshot.val().enabled;
   if (!enabled) {window.location.replace("https://yeetserver.github.io/settings/login")}
