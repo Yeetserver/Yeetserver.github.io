@@ -9,7 +9,7 @@
     <script defer src="/src/dependencies/appearance.js"></script>
     <!-- Titlebar -->
     <link rel="shortcut icon" type="image/x-icon" href="/assets/images/index-icon.png"/>
-    <title>RootsAssistent - Dashboard</title>
+    <title>Roots Assistent - Dashboard</title>
     <!-- Open Graph protocol -->
     <meta property="og:type" content="Website">
     <meta property="og:title" content="Yeetserver Website">
@@ -25,10 +25,12 @@
     <h1>Konsole</h1>
     <p>──────────────────────────────</p>
 
-    <label for="channel">KanalID:</label>
+    <label for="channel">Kanal ID:</label>
     <input type="text" id="channel" name="channel"><br><br>
-    <label for="channel">Profilbild URL:</label>
-    <input type="text" id="pfpUrl" name="pfpUrl"><br><br>
+    <label for="pfpUrl">Profilbild URL:</label>
+    <input type="text" id="pfpUrl" name="pfpUrl">
+    <input type="button" id="showpfps" name="showpfps" value="+"><br>
+    <p class="pfps_list" id="pfps" name="pfps"></p><br>
     <label for="name">Name:</label>
     <input type="text" id="name" name="name"><br><br>
     <label for="message">Nachricht:</label>
@@ -42,11 +44,10 @@
 
     <label for="statusdropdown">Aktivität:</label>
     <select name="statusdropdown" id="statusdropdown">
-    <option value="0">Spielt -</option>
-    <option value="2">Hört - zu</option>
-    <option value="3">Schaut -</option>
-    <option value="5">Tritt an in -</option>
-    
+        <option value="0">Spielt -</option>
+        <option value="2">Hört - zu</option>
+        <option value="3">Schaut -</option>
+        <option value="5">Tritt an in -</option>
     </select><br><br>
     <input type="button" id="update" value="Anwenden">
     
