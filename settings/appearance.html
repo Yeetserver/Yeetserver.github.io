@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <!-- Scripts & CSS -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
+    <link rel="stylesheet" href="/src/dependencies/appearance.css">
+    <script src="/src/dependencies/functions.js"></script>
+    <script src="/src/dependencies/cookies.js"></script>
+    <script defer src="/src/dependencies/appearance.js"></script>
+    <!-- Titlebar -->
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/images/index-icon.png"/>
+    <title>Yeetserver</title>
+    <!-- Open Graph protocol -->
+    <meta property="og:type" content="Website">
+    <meta property="og:title" content="Yeetserver Website">
+    <meta property="og:description" content="Die Offizielle Website des Yeetserver's"/>
+    <meta property="og:image" content="https://yeetserver.github.io/assets/images/index-icon.png"/>
+    <!-- Website specific contents -->
+</head>
+<body onload="startup()">
+
+<div class="dropdown">
+    <select onchange="appearanceButton()" id="appearances">
+        <option value="darkmode">Darkmode</option>
+        <option value="whitemode">Whitemode</option>
+        <option value="sunrise">Sonnenaufgang</option>
+        <option value="terminal">Terminal</option>
+        <option value="random">Zufällig</option>
+    </select>
+    <button class="delete-all-cookies-class" id="delete-cookies-button" onclick="deleteAllCookies()">Alle Cookies löschen</button>
+<button class="show-cookies-class" id="show-cookies-button" onclick="alert(document.cookie)">Gespeicherte Cookies anzeigen</button>
+</div>
+
+</body>
+</html>

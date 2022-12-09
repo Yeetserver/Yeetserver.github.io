@@ -1,5 +1,5 @@
 function changeAppearance(appearance) {
-    document.cookie = `appearance=${appearance}`;
+    setCookie("appearance", appearance)
     if (appearance == "darkmode") {
     document.documentElement.style.setProperty('--background_appearance', 'rgb(32, 32, 32)');
     document.documentElement.style.setProperty('--foreground_appearance', 'rgb(255, 255, 255)');
@@ -22,20 +22,17 @@ function changeAppearance(appearance) {
         document.documentElement.style.setProperty('--background_appearance', `rgb(${getRandomInt(255)}, ${getRandomInt(255)}, ${getRandomInt(255)})`);
         document.documentElement.style.setProperty('--foreground_appearance', `rgb(${getRandomInt(255)}, ${getRandomInt(255)}, ${getRandomInt(255)})`);
     }
-    else {
-        changeAppearance("darkmode");
-    }
 }
 
 function appearanceButton() {
     var selectedValue = document.getElementById("appearances").value;
-    changeAppearance(`${selectedValue}`)
+    changeAppearance(selectedValue)
 }
 
 function loadAppearance() {
     changeAppearance(getCookie("appearance"));
-    if (getCookie("visited") !== "true") {
-        document.cookie = `appearance=darkmode`;
+    if (getCookie("visited") != "true") {
+        changeAppearance("darkmode")
         on()
     }
     try {document.getElementById("appearances").value = getCookie("appearance");}
