@@ -1,16 +1,9 @@
-function setCookie(name, value, exdays) {
-    if (exdays == undefined || exdays == null) {
-        const d = new Date();
-        d.setTime(d.getTime() + (exdays*24*60*60*1000));
-        let expires = "expires="+ d.toUTCString();
-        document.cookie = name + "=" + value + ";" + expires + ";path=/";
-        document.cookie = `${name}=${value}; ${expires}; path=/`;
-    }
-    else {
-        document.cookie = `${name}=${value}`;
-
-    }
-}
+function setCookie(cname, cvalue, exdays) {
+    const d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    let expires = "expires="+ d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";";
+  }
 
 function getCookie(cname) {
     let name = cname + "=";
@@ -32,11 +25,6 @@ function deleteCookie(cookie) {
 }
     
 function deleteAllCookies() {
-    var cookies = document.cookie.split(";");
-    for (var i = 0; i < cookies.length; i++) {
-        var cookie = cookies[i];
-        var eqPos = cookie.indexOf("=");
-        var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-        document.cookie = name + "=;expires=Thu, 01 Jan 2000 00:00:00 GMT";
-}}
+    document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); });
+}
 
