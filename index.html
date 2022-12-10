@@ -33,41 +33,18 @@
 <button class="show-cookies-class" id="show-cookies-button" onclick="alert(document.cookie)">Gespeicherte Cookies anzeigen</button>
 </div>
 
-<div class="random-emoji-class">
-    <div>
-        <label id="random-emoji-label" class="random-emoji-label-class"></label>
-    </div>
-    <script>
-    const myArray = [
-    "😀",
-    "🤨",
-    "😥",
-    "😮",
-    "😨",
-    "😵",
-    "😦",
-    "🤫"
-    ];
-    var randomItem = myArray[Math.floor(Math.random()*myArray.length)];
-        document.getElementById('random-emoji-label').innerHTML = `Zufälliges Emoji ${randomItem}`;
-    </script>
+<div id="links">
+    <br><a href="https://yeetserver.github.io/games">Yeetserver/Games</a>
+    <br><a href="https://yeetserver.github.io/settings/contributions">Yeetserver/Contributions</a>
+    <br><a href="https://yeetserver.github.io/settings/policy">Yeetserver/Policy</a>
 </div>
 
-<div class="calcClass">
-    <b>Simpler Rechenapperat ➡ &nbsp; </b>
-    <button name="calcButton" onclick="calculator()" class="calcButtonClass">🧮</button>
-</div>
 
-<br><a href="https://yeetserver.github.io/games">Yeetserver/Games</a>
-<br><a href="https://yeetserver.github.io/settings/contributions">Yeetserver/Contributions</a>
-<br><a href="https://yeetserver.github.io/settings/policy">Yeetserver/Policy</a>
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
     <div id="overlay">
     <div id="text">Diese Seite benutzt Cookies um getroffene Einstellungen zu Speichern<br>
     <a href="/policy">Mehr Informationen<br></a>
-    <button name="hidecookiebanner" onclick="off()">OK</button>
-</div>
-
+    <button name="hidecookiebanner" onclick="off()">OK</button></div>
 </body>
 </html>
