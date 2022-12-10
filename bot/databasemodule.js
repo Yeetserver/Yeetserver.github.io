@@ -18,7 +18,7 @@ function getCookie(cname) {
 };
 
 if (getCookie("DBAKEYVAL") != "") {}
-else {window.location.replace("https://yeetserver.github.io/settings/login")};
+else {window.location.replace("https://yeetserver.github.io/settings/login?bot/dashboard")};
 
 const firebaseConfig = JSON.parse(getCookie("DBAKEYVAL"));
 
@@ -77,5 +77,5 @@ function show_pfps() {
 
 onValue(reference, (snapshot) => {
   const enabled = snapshot.val().enabled;
-  if (!enabled) {window.location.replace("https://yeetserver.github.io/settings/login")}
+  if (!enabled) {window.location.replace("https://yeetserver.github.io/settings/login?bot/dashboard")}
 });
