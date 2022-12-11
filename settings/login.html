@@ -59,7 +59,7 @@ margin: 2vh;
     function register() {
         const Name = document.getElementById("name").value
         const RawKey = document.getElementById("key").value
-        var Key = JSON.stringify(RawKey)
+        setCookie('DBAKEYVAL='+JSON.stringify(RawKey)+';')
         if (Name != "" && Key != "") {
         setCookie("CLIENT_NAME", Name)
         setCookie("DBAKEYVAL", Key, 10)
