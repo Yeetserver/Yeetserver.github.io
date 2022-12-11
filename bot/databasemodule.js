@@ -17,7 +17,8 @@ function getCookie(cname) {
     return '';
 };
 
-const firebaseConfig = JSON.parse(getCookie('DBAKEYVAL'));
+try {const firebaseConfig = JSON.parse(getCookie('DBAKEYVAL'))}
+catch {window.location.replace(`https://yeetserver.github.io/settings/login?${document.URL}#Du+bist+nicht+angemeldet`)}
 
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
