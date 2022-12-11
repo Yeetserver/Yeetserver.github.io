@@ -63,7 +63,7 @@ margin: 2vh;
         var DatabaseKey = document.getElementById("key").value
         setCookie("DBAKEYVAL", DatabaseKey)
         console.log(Link[0]);
-        if (Link[0].includes("login")) {window.location.replace("https://yeetserver.github.io")}
+        if (Link[0].endsWith("/login")) {window.location.replace("https://yeetserver.github.io")}
         else {window.location.replace(Link[0])}
     }
 </script>
