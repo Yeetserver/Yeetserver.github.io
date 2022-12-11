@@ -57,10 +57,12 @@ margin: 2vh;
     const ReturnMessage = `${Link[1]}`.split("#")
     document.getElementById("message").innerHTML = ReturnMessage[1].split("+").join(" ")
     function register() {
-        if (document.getElementById("name").value == "" && document.getElementById("key").value == "") {return}
-        setCookie("CLIENT_NAME", document.getElementById("name").value)
-        setCookie("DBAKEYVAL", document.getElementById("key").value)
-        window.location.replace(ReturnMessage[0])
+        const Name = document.getElementById("name").value
+        const Key = document.getElementById("key").value
+        if (Name != "" && Key != "") {
+        setCookie("CLIENT_NAME", Name)
+        setCookie("DBAKEYVAL", Key)
+        window.location.replace(ReturnMessage[0])}
     }
 </script>
 </html>
