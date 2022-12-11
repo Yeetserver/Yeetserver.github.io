@@ -21,9 +21,9 @@
 
 <div class="login">
     <form class="loginform">
-        <label for="name">Name:</label>
+        <label for="name">Name:</label><br>
         <input type="text" id="name" name="name"><br><br>
-        <label for="key">Key:</label>
+        <label for="key">Zugangsschlüssel:</label><br>
         <input type="text" id="key" name="key"><br><br>
     </form>
     <button onclick="register()">Register</button>
@@ -32,6 +32,7 @@
     Vel blanditiis quisquam corrupti sequi est odio eligendi vero repudiandae?
     Eveniet illo tempore dolor!</p>
 </div>
+<h1 id="message" class="message"></h1>
 
 </body>
 <style>
@@ -39,7 +40,10 @@ body {
 padding: 0;
 margin: 2vh;
 }
-
+.message {
+    text-align: center;
+    color: orange;
+}
 .login {
     margin: auto;
     width: 50%;
@@ -49,14 +53,18 @@ margin: 2vh;
 </style>
 
 <script defer type="text/javascript">
+    const Link = document.URL.split("?");
+    const ReturnMessage = `${Link[1]}`.split("#")
+    document.getElementById("message").innerHTML = ReturnMessage[1].split("+").join(" ")
     function register() {
         if (document.getElementById("name").value != "" && document.getElementById("key").value != "")
         console.info("Registerd client " + document.getElementById("name").value)
         setCookie("CLIENT_NAME", document.getElementById("name").value)
         var DatabaseKey = document.getElementById("key").value
         setCookie("DBAKEYVAL", DatabaseKey)
-        var GetBack = document.URL.split("?");
-        window.location.replace("https://yeetserver.github.io/"+GetBack[1])
+        console.log(Link[0]);
+        if (Link[0].includes("login")) {window.location.replace("https://yeetserver.github.io")}
+        else {window.location.replace(Link[0])}
     }
 </script>
 </html>
