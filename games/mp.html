@@ -59,8 +59,8 @@ import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.12.1/firebas
 import { getAuth } from 'https://www.gstatic.com/firebasejs/9.12.1/firebase-auth.js';
 import { getDatabase, ref, onValue, set, child, get } from 'https://www.gstatic.com/firebasejs/9.12.1/firebase-database.js';
 
-try {const firebaseConfig = JSON.parse(getCookie('DBAKEYVAL'))}
-catch {window.location.replace(`https://yeetserver.github.io/settings/login?${document.URL}#Du+bist+nicht+angemeldet`)}
+console.log(getCookie("DBAKEYVAL"));
+const firebaseConfig = JSON.parse(getCookie("DBAKEYVAL"))
 
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);

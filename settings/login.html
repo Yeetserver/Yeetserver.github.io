@@ -58,10 +58,11 @@ margin: 2vh;
     document.getElementById("message").innerHTML = ReturnMessage[1].split("+").join(" ")
     function register() {
         const Name = document.getElementById("name").value
-        const Key = document.getElementById("key").value
+        const RawKey = document.getElementById("key").value
+        var Key = JSON.stringify(RawKey)
         if (Name != "" && Key != "") {
         setCookie("CLIENT_NAME", Name)
-        setCookie("DBAKEYVAL", Key)
+        setCookie("DBAKEYVAL", Key, 10)
         window.location.replace(ReturnMessage[0])}
     }
 </script>
