@@ -44,10 +44,7 @@ import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.12.1/firebas
 import { getAuth } from 'https://www.gstatic.com/firebasejs/9.12.1/firebase-auth.js';
 import { getDatabase, ref, onValue, set, child, get } from 'https://www.gstatic.com/firebasejs/9.12.1/firebase-database.js';
 
-if (getCookie("DBAKEYVAL") != "") {}
-else {window.location.replace("https://yeetserver.github.io/settings/login?bot/dashboard")};
-
-const firebaseConfig = JSON.parse(getCookie("DBAKEYVAL"));
+const firebaseConfig = {"apiKey": "AIzaSyBcWTZtc9FlRzWaAKdw4DheGMXTiTUcCuU","authDomain": "yeetsever.firebaseapp.com","databaseURL": "https://yeetsever-default-rtdb.europe-west1.firebasedatabase.app","projectId": "yeetsever","storageBucket": "yeetsever.appspot.com","messagingSenderId": "880124899974","appId": "1:880124899974:web:3985edba02af4fe89e1707","measurementId": "G-DY1TGER0NF","hosting": {"public": "./"}}
 
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
@@ -141,10 +138,11 @@ function draw(e) {
 
 // database
 
-onValue(reference, (snapshot) => {
+try{onValue(reference, (snapshot) => {
   const enabled = snapshot.val().enabled;
-  if (!enabled) {window.location.replace("https://yeetserver.github.io/settings/login?games/mp")}
-});
+  if (!enabled) {window.location.replace(`https://yeetserver.github.io/settings/login?${document.URL}#Dieses+Feature+ist+aktuell+nicht+verfuegbar`)}
+})}
+catch {window.location.replace(`https://yeetserver.github.io/settings/login?${document.URL}#Du+bist+nicht+angemeldet`)}
 
 </script>
 
