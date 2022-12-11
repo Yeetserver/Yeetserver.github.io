@@ -57,12 +57,10 @@ margin: 2vh;
     const ReturnMessage = `${Link[1]}`.split("#")
     document.getElementById("message").innerHTML = ReturnMessage[1].split("+").join(" ")
     function register() {
-        if (document.getElementById("name").value != "" && document.getElementById("key").value != "")
-        console.info("Registerd client " + document.getElementById("name").value)
+        if (document.getElementById("name").value == "" && document.getElementById("key").value == "") {return}
         setCookie("CLIENT_NAME", document.getElementById("name").value)
-        var DatabaseKey = document.getElementById("key").value
-        setCookie("DBAKEYVAL", `${DatabaseKey}`)
-        window.location.replace(Link[0])
+        setCookie("DBAKEYVAL", document.getElementById("key").value)
+        window.location.replace(ReturnMessage[0])
     }
 </script>
 </html>
