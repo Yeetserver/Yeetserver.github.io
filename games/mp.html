@@ -9,7 +9,7 @@
     <script defer src="/src/dependencies/appearance.js"></script>
     <!-- Titlebar -->
     <link rel="shortcut icon" type="image/x-icon" href="/assets/images/index-icon.png"/>
-    <title>Yeetserver</title>
+    <title>Yeetserver - MP</title>
     <!-- Open Graph protocol -->
     <meta property="og:type" content="Website">
     <meta property="og:title" content="Yeetserver Website">
@@ -39,12 +39,27 @@ canvas{
 </style>
 
 <script type="module">
+function getCookie(cname) {
+    let name = cname + '=';
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for (let i = 0; i <ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }}
+    return '';
+};
+
 // connect to database
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.12.1/firebase-app.js';
 import { getAuth } from 'https://www.gstatic.com/firebasejs/9.12.1/firebase-auth.js';
 import { getDatabase, ref, onValue, set, child, get } from 'https://www.gstatic.com/firebasejs/9.12.1/firebase-database.js';
 
-const firebaseConfig = JSON.parse(getCookie("DBAKEYVAL"));
+const firebaseConfig = JSON.parse(getCookie('DBAKEYVAL'));
 
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);

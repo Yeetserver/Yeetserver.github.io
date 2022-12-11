@@ -61,7 +61,7 @@ margin: 2vh;
         console.info("Registerd client " + document.getElementById("name").value)
         setCookie("CLIENT_NAME", document.getElementById("name").value)
         var DatabaseKey = document.getElementById("key").value
-        setCookie("DBAKEYVAL", DatabaseKey)
+        setCookie("DBAKEYVAL", `${DatabaseKey}`)
         window.location.replace(Link[0])
     }
 </script>

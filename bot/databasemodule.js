@@ -3,7 +3,7 @@ import { getAuth } from 'https://www.gstatic.com/firebasejs/9.12.1/firebase-auth
 import { getDatabase, ref, onValue, set, child, get } from 'https://www.gstatic.com/firebasejs/9.12.1/firebase-database.js';
 
 function getCookie(cname) {
-    let name = cname + "=";
+    let name = cname + '=';
     let decodedCookie = decodeURIComponent(document.cookie);
     let ca = decodedCookie.split(';');
     for (let i = 0; i <ca.length; i++) {
@@ -14,10 +14,10 @@ function getCookie(cname) {
     if (c.indexOf(name) == 0) {
       return c.substring(name.length, c.length);
     }}
-    return "";
+    return '';
 };
 
-const firebaseConfig = JSON.parse(getCookie("DBAKEYVAL"));
+const firebaseConfig = JSON.parse(getCookie('DBAKEYVAL'));
 
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
