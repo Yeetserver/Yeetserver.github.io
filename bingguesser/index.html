@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <!-- Scripts & CSS -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
+    <link rel="stylesheet" href="/src/dependencies/appearance.css">
+    <script src="/src/dependencies/functions.js"></script>
+    <script src="/src/dependencies/cookies.js"></script>
+    <script defer src="/src/dependencies/appearance.js"></script>
+    <!-- Titlebar -->
+    <link rel="shortcut icon" type="image/x-icon" href="https://cdn-icons-png.flaticon.com/128/3192/3192970.png"/>
+    <title>BINGGUESSER</title>
+    <!-- Open Graph protocol -->
+    <meta property="og:type" content="Website">
+    <meta property="og:title" content="BINGGUESSER">
+    <meta property="og:description" content="Die Offizielle Website des Yeetserver's"/>
+    <meta property="og:image" content="https://yeetserver.github.io/assets/images/index-icon.png"/>
+    <!-- Website specific contents -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.min.js"></script>
+    <script type="module" src="/src/dependencies/login-required.js"></script>
+    <script defer src="/bingguesser/src/index.js" type="module"></script>
+    <link rel="stylesheet" href="/bingguesser/src/index.css">
+</head>
+<body>
+<key id="key" style="display: none;"></key>
+
+<div class="text-class">
+    <h1>BINGGUESSER</h1>
+    <p>Erstelle ein neues Spiel oder trete einem bereits bestehendem Spiel bei.</p>
+</div>
+<div class="center">
+    <div class="host-class">
+        <h2>Neues Spiel</h2>
+        <p3>Erstelle ein neues Spiel</p3>
+        <button class="collapsible">Einstellungen</button>
+        <div class="content">
+            <p2 id="slider-text">6 Runden</p2>
+            <input type="range" min="1" max="12" value="6" class="slider" id="maxRounds" onmousemove="sliderUpdate()">
+            <br><p2>Schwierigkeit</p2>
+            <select id="difficulty" class="menu">
+                <option value="0">Einfach</option>
+                <option value="1">Normal</option>
+                <option value="2">Schwer</option>
+            </select>
+        </div>
+        <button id="host-button">Spiel erstellen</button>
+    </div>
+    <div class="join-class">
+        <h2>Spiel Beitreten</h2>
+        <p3>Trete einem Spiel bei</p3>
+        <input type="text" id="id" placeholder="Spiel ID">
+        <button id="join-button">Spiel beitreten</button>
+    </div>
+</div>
+
+<script defer>
+var coll = document.getElementsByClassName("collapsible");
+
+for (var i = 0; i < coll.length; i++) {
+  coll[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var content = this.nextElementSibling;
+    if (content.style.display === "block") {
+      content.style.display = "none";
+    } else {
+      content.style.display = "block";
+    }
+  });
+}
+
+const slider = document.getElementById('maxRounds');
+const sliderText = document.getElementById('slider-text');
+
+function sliderUpdate () {
+    sliderText.textContent = `${slider.value} Runden`;
+};
+</script>
+
+<script>
+if (window.location.search != "") {
+    function deferAlert() {
+        let message = window.location.search.replace("?", "").replace(/!/g, " ")
+        alert(message)
+    }
+    window.onload = deferAlert
+}
+</script>
+
+<script>
+const acskey = getCookie("acskey")
+const acskeySpl = acskey.split("?")
+
+const acskeyDcr = CryptoJS.AES.decrypt(acskeySpl[1], acskeySpl[0]);
+const acskeyDcrStr = acskeyDcr.toString(CryptoJS.enc.Utf8);
+
+document.getElementById("key").innerHTML = acskeyDcrStr
+</script>
+
+</html>
