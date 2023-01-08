@@ -16,10 +16,13 @@
     <meta property="og:description" content="Die Offizielle Website des Yeetserver's"/>
     <meta property="og:image" content="https://yeetserver.github.io/assets/images/index-icon.png"/>
     <!-- Website specific contents -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.min.js"></script>
+    <script type="module" src="/src/dependencies/login-required.js"></script>
     <link rel="stylesheet" href="/bot/style.css">
     <script defer type="module" src="/bot/databasemodule.js"></script>
 </head>
 <body onloadeddata="startup()">
+<key id="key" style="display: none;"></key>
 
 <form class="console">
     <h1>Konsole</h1>
@@ -58,6 +61,16 @@
     <h1>Laufzeit</h1>
     <p id="uptime">00:00 Stunden</p>
 </div>
+
+<script>
+const acskey = getCookie("acskey")
+const acskeySpl = acskey.split("?")
+
+const acskeyDcr = CryptoJS.AES.decrypt(acskeySpl[1], acskeySpl[0]);
+const acskeyDcrStr = acskeyDcr.toString(CryptoJS.enc.Utf8);
+
+document.getElementById("key").innerHTML = acskeyDcrStr
+</script>
 
 </body>
 </html>

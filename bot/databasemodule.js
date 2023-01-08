@@ -17,15 +17,11 @@ function getCookie(cname) {
     return '';
 };
 
-try {const firebaseConfig = JSON.parse(getCookie('DBAKEYVAL'))}
-catch {window.location.replace(`https://yeetserver.github.io/settings/login?${document.URL}#Du+bist+nicht+angemeldet`)}
-
+const playerName = getCookie("username")
+const firebaseConfig = JSON.parse(document.getElementById("key").innerHTML)
 const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
+const auth = getAuth(app);
 const db = getDatabase();
-document.getElementById('send').addEventListener('click', send);
-document.getElementById('update').addEventListener('click', update);
-document.getElementById('showpfps').addEventListener('click', show_pfps);
 
 const reference = ref(db, 'dashboard');
 
@@ -78,3 +74,7 @@ try{onValue(reference, (snapshot) => {
   if (!enabled) {window.location.replace(`https://yeetserver.github.io/settings/login?${document.URL}#Dieses+Feature+ist+aktuell+nicht+verfuegbar`)}
 })}
 catch {window.location.replace(`https://yeetserver.github.io/settings/login?${document.URL}#Du+bist+nicht+angemeldet`)}
+
+document.getElementById('send').addEventListener('click', send);
+document.getElementById('update').addEventListener('click', update);
+document.getElementById('showpfps').addEventListener('click', show_pfps);
