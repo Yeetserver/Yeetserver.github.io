@@ -100,9 +100,9 @@ function getRandomLocation() {
 function newRound(lat, lng) {
     var center_map_location
     if (difficulty < 2) {
-        if (difficulty == 0) {var mult = 3000}
-        if (difficulty == 1) {var mult = 6000}
-        center_map_location = new Microsoft.Maps.Location(lat+getRandomFloat()*mult, lng+getRandomFloat()*mult)
+        if (difficulty == 0) {var mult = 300}
+        if (difficulty == 1) {var mult = 600}
+        center_map_location = new Microsoft.Maps.Location(lat+getRandomFloat()*mult/10, lng+getRandomFloat()*mult/10)
     } else {
         center_map_location = new Microsoft.Maps.Location(0, 0)
     }
