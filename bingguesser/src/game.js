@@ -102,7 +102,7 @@ function newRound(lat, lng) {
 
     street_view_location = new Microsoft.Maps.Location(lat, lng)
 
-    let center_map_location = new Microsoft.Maps.Location(lat+Math.random(), lng+Math.random())
+    var center_map_location = new Microsoft.Maps.Location(lat+Math.random(), lng+Math.random())
 
     map = new Microsoft.Maps.Map(document.getElementById('map'), {
         center: center_map_location,
@@ -135,8 +135,8 @@ function newRound(lat, lng) {
 
     Microsoft.Maps.Events.addHandler(map, 'click', function(e) {
         var clickedAt = new Microsoft.Maps.Point(e.getX(), e.getY());
-        var location = e.target.tryPixelToLocation(clickedAt)
-        var map_location = new Microsoft.Maps.Location(location.latitude, location.longitude)
+        var location = e.target.tryPixelToLocation(clickedAt);
+        var map_location = new Microsoft.Maps.Location(location.latitude, location.longitude);
         map.entities.clear();
         addPushpin(map_location, "Guess", "Dein Guess", "O");
 
