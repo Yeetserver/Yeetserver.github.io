@@ -98,22 +98,15 @@ function getRandomLocation() {
 };
 
 function newRound(lat, lng) {
-    var center_map_location
-    if (difficulty < 2) {
-        if (difficulty == 0) {var mult = 300}
-        if (difficulty == 1) {var mult = 600}
-        center_map_location = new Microsoft.Maps.Location(lat+getRandomFloat()*mult/10, lng+getRandomFloat()*mult/10)
-    } else {
-        center_map_location = new Microsoft.Maps.Location(0, 0)
-    }
-
     document.getElementById("street-view").style.visibility = "hidden";
 
     street_view_location = new Microsoft.Maps.Location(lat, lng)
 
+    center_map_location = new Microsoft.Maps.Location(lat+Math.random(), lng+Math.random())
+
     map = new Microsoft.Maps.Map(document.getElementById('map'), {
         center: center_map_location,
-        zoom: 3 - difficulty,
+        zoom: Math.max(0, 2 - difficulty),
         showDashboard: false,
         enableClickableLogo: false,
         showTermsLink: false,
