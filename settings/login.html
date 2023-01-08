@@ -16,54 +16,63 @@
     <meta property="og:description" content="Die Offizielle Website des Yeetserver's"/>
     <meta property="og:image" content="https://yeetserver.github.io/assets/images/index-icon.png"/>
     <!-- Website specific contents -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.min.js"></script>
+    <script defer src="/settings/src/login.js" type="module"></script>
 </head>
 <body onload="startup()">
-
-<div class="login">
-    <form class="loginform">
-        <label for="name">Name:</label><br>
-        <input type="text" id="name" name="name"><br><br>
-        <label for="key">Zugangsschlüssel:</label><br>
-        <input type="text" id="key" name="key"><br><br>
-    </form>
-    <button onclick="register()">Register</button>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt facilis,
-    animi qui doloribus placeat repudiandae odio.
-    Vel blanditiis quisquam corrupti sequi est odio eligendi vero repudiandae?
-    Eveniet illo tempore dolor!</p>
-</div>
-<h1 id="message" class="message"></h1>
-
-</body>
 <style>
-body {
-padding: 0;
-margin: 2vh;
-}
-.message {
-    text-align: center;
-    color: orange;
-}
-.login {
-    margin: auto;
-    width: 50%;
-    border: 3px solid green;
-    padding: 10px;
-}
+    body {
+        font-size: x-large;
+    }
+        #login-button {
+        padding: 15px 25px;
+        border: none;
+        border-radius: 5px;
+        background-color: rgb(117, 25, 25);
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+    }
+    /* Add some style to center the text and button */
+    .center {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        margin-top: 15%;
+        }
+    h1 {
+        margin-top: 0;
+        font-size: xx-large;
+    }
+    p {
+        margin-top: 0;
+    }
 </style>
 
-<script defer type="text/javascript">
-    const Link = document.URL.split("?");
-    const ReturnMessage = `${Link[1]}`.split("#")
-    document.getElementById("message").innerHTML = ReturnMessage[1].split("+").join(" ")
-    function register() {
-        const Name = document.getElementById("name").value
-        const RawKey = document.getElementById("key").value
-        setCookie('DBAKEYVAL='+JSON.stringify(RawKey)+';')
-        if (Name != "" && Key != "") {
-        setCookie("CLIENT_NAME", Name)
-        setCookie("DBAKEYVAL", Key, 10)
-        window.location.replace(ReturnMessage[0])}
-    }
+<body>
+<key id="key" style="display: none;"></key>
+
+<div class="center">
+    <h1>Anmeldung</h1>
+    <p>Melde an um Zugriff auf einige Features zu erhalten</p>
+    <p>Anzeigename: <input type="text" id="name"></p>
+    <p>Zugangschlüssel: <input type="password" id="acskey"></p>
+    <button id="login-button">Anmelden</button>
+</div>
+
+<script>
+document.getElementById('login-button').addEventListener('click', function() {
+const acskey = document.getElementById("acskey").value
+const acskeySpl = acskey.split("?")
+
+const acskeyDcr = CryptoJS.AES.decrypt(acskeySpl[1], acskeySpl[0]);
+const acskeyDcrStr = acskeyDcr.toString(CryptoJS.enc.Utf8);
+
+document.getElementById("key").innerHTML = acskeyDcrStr
+})
+
 </script>
+
+</body>
 </html>
