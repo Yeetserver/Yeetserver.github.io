@@ -50,7 +50,7 @@ const refPlayerGuess = ref(db, 'bingguesser/' + gameid + '/player/' + playerName
 // global vars
 
 var street_view_location
-var map_location
+var center_map_location
 
 var map
 var street_view
@@ -102,7 +102,7 @@ function newRound(lat, lng) {
 
     street_view_location = new Microsoft.Maps.Location(lat, lng)
 
-    var center_map_location = new Microsoft.Maps.Location(lat+Math.random(), lng+Math.random())
+    center_map_location = new Microsoft.Maps.Location(lat+Math.random(), lng+Math.random())
 
     map = new Microsoft.Maps.Map(document.getElementById('map'), {
         center: center_map_location,
