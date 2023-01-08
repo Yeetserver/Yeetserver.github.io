@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <!-- Scripts & CSS -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
+    <!-- Titlebar -->
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/images/index-icon.png"/>
+    <title>Yeetserver - MP</title>
+    <!-- Open Graph protocol -->
+    <meta property="og:type" content="Website">
+    <meta property="og:title" content="Yeetserver Website">
+    <meta property="og:description" content="Die Offizielle Website des Yeetserver's"/>
+    <meta property="og:image" content="https://yeetserver.github.io/assets/images/index-icon.png"/>
+    <!-- Website specific contents -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.min.js"></script>
+    <script type="module" src="/src/dependencies/login-required.js"></script>
+</head>
+<body>
+<key id="key" style="display: none;"></key>
+
+<canvas id="canvas"></canvas>
+
+<div class="buttons">
+<input id="saveButton" class="button" type="image" src="https://cdn-icons-png.flaticon.com/128/439/439894.png"/>
+<input id="loadButton" class="button" type="image" src="https://cdn-icons-png.flaticon.com/128/3121/3121602.png"/>
+<input id="clearButton" class="button" type="image" src="https://cdn-icons-png.flaticon.com/128/484/484560.png"/>
+<input id="colorChooser" class="button" type="color" src="https://cdn-icons-png.flaticon.com/128/3214/3214398.png"/>
+</div>
+<style>
+body {
+  justify-items: center ;
+  background-color: black;
+  margin: 0;
+}
+canvas {
+  position: absolute; /* positions the element in the absolute position */
+  top: 50%; /* centers the element vertically */
+  left: 50%; /* centers the element horizontally */
+  transform: translate(-50%, -50%); /* adjusts the position of the element */
+  width: 1000px; /* sets the width of the canvas */
+  height: 600px; /* sets the height of the canvas */
+  border: 5px solid white;
+  image-rendering: pixelated;
+}
+.buttons {
+  position:absolute;
+  left:10px;
+  top:10px;
+}
+.button {
+  height: 40px;
+  width: 40px;
+}
+</style>
+
+<script>
+  const acskey = getCookie("acskey")
+  const acskeySpl = acskey.split("?")
+  
+  const acskeyDcr = CryptoJS.AES.decrypt(acskeySpl[1], acskeySpl[0]);
+  const acskeyDcrStr = acskeyDcr.toString(CryptoJS.enc.Utf8);
+  
+  document.getElementById("key").innerHTML = acskeyDcrStr
+</script>
+<script defer type="module">
+function getCookie(cname) {
+    let name = cname + '=';
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for (let i = 0; i <ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }}
+    return '';
+};
+
+// connect to database
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.12.1/firebase-app.js';
+import { getAuth } from 'https://www.gstatic.com/firebasejs/9.12.1/firebase-auth.js';
+import { getDatabase, ref, onValue, set, child, get } from 'https://www.gstatic.com/firebasejs/9.12.1/firebase-database.js';
+
+const playerName = getCookie("username")
+const firebaseConfig = JSON.parse(document.getElementById("key").innerHTML)
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getDatabase();
+const refGame = ref(db, 'game');
+
+const canvas = document.getElementById('canvas');
+var ctx = canvas.getContext('2d');
+
+// general functions
+
+function changeColor () {
+  console.log(`changed color from ${ctx.strokeStyle} to ${document.getElementById('colorChooser').value}`);
+  ctx.strokeStyle = document.getElementById('colorChooser').value
+}
+
+function clearCanvas() {
+  ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height)
+}
+
+// style settings
+ctx.lineWidth = 1;
+ctx.lineCap = 'square';
+ctx.strokeStyle = '#00aaff';
+document.getElementById('colorChooser').value = '#00aaff'
+
+// track the previous position of the mouse
+
+const mirrored = true
+
+function drawLine(x1, y1, x2, y2) {
+  let ctx = canvas.getContext('2d');
+  ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(x2, y2);
+  ctx.stroke();
+  if (mirrored) {
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
+  }
+}
+
+
+let isDrawing = false;
+let lastX;
+let lastY;
+
+canvas.addEventListener('mousedown', e => {
+  isDrawing = true;
+  let rect = canvas.getBoundingClientRect();
+  lastX = (e.clientX - rect.left) * canvas.width / rect.width;
+  lastY = (e.clientY - rect.top) * canvas.height / rect.height;
+});
+
+canvas.addEventListener('mousemove', e => {
+  if (!isDrawing) return;
+  let rect = canvas.getBoundingClientRect();
+  let canvasX = (e.clientX - rect.left) * canvas.width / rect.width;
+  let canvasY = (e.clientY - rect.top) * canvas.height / rect.height;
+  drawLine(lastX, lastY, canvasX, canvasY);
+  lastX = canvasX;
+  lastY = canvasY;
+});
+
+canvas.addEventListener('mouseup', () => isDrawing = false);
+
+document.getElementById('clearButton').addEventListener('click', clearCanvas);
+document.getElementById('saveButton').addEventListener('click', save);
+document.getElementById('loadButton').addEventListener('click', load);
+document.getElementById('colorChooser').addEventListener('change', changeColor);
+
+// database
+
+function save () {
+  var data = canvas.toDataURL();
+  set(refGame, {
+  canvas: data,
+  enabled: true
+  })
+}
+
+function load () {
+  clearCanvas()
+  onValue(refGame, (snapshot) => {
+  var img = new Image;
+  img.onload = function(){
+    ctx.drawImage(img,0,0); // Or at whatever offset you like
+  };
+  img.src = snapshot.val().canvas
+})};
+
+onValue(refGame, (snapshot) => {
+  if (snapshot.val().enabled != undefined) {
+  if (!snapshot.val().enabled) {window.location.href = `../`}}
+  else {window.location.href = `../`};
+});
+</script>
+</body>
+</html>
+
