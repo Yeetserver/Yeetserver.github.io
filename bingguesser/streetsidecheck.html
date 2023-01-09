@@ -26,6 +26,7 @@
     <div class="space" id="buttons">
         <button onclick="switchLocation()">Spawnen</button>
         <button onclick="saveLocation()">Speichern</button>
+        <button onclick="loadExisting()">Laden</button>
     </div>
 </div>
 
@@ -34,6 +35,8 @@
     <p id="list"></p>
     <button onclick="copyLocations()" id="copy-list">Kopieren</button>
 </div>
+
+<p id="existing-list"></p>
 
 <div id='street-view'></div>
 
@@ -80,6 +83,18 @@ function copyLocations() {
     navigator.clipboard.writeText(JSON.stringify(location_list))
 }
 
+async function loadExisting () {
+    async function getJSON() {
+    try {
+      const response = await fetch('/bingguesser/src/locations.json');
+      return response.json();
+    } catch (error) {
+      console.error(error);
+    }
+    }
+document.getElementById("existing-list").innerText = Object.keys(await getJSON())
+}
+
 </script>
 <style>
 body {
@@ -106,8 +121,8 @@ body {
     border: 3px solid green;
     padding: 10px;
     top: 20vh;
-    left: 30vw;
-    width: 60vw;
+    left: 25vw;
+    width: 50vw;
     height: 60vh;
 }
 
@@ -119,10 +134,25 @@ body {
     padding: 10px;
     top: 20vh;
     left: 0.5vw;
-    width: 20vw;
+    width: 15vw;
     height: 60vh;
-    max-width: 20vw;
+    max-width: 15vw;
     max-height: 60vh;
+}
+
+#existing-list {
+    color: white;
+    position: absolute;
+    margin: auto;
+    border: 3px solid green;
+    padding: 10px;
+    top: 20vh;
+    right: 0.5vw;
+    width: 15vw;
+    height: 60vh;
+    max-width: 15vw;
+    max-height: 60vh;
+    overflow-wrap:break-word;
 }
 
 a:link {
