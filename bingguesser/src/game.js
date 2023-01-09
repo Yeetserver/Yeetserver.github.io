@@ -56,6 +56,7 @@ var map
 var street_view
 var locationsJSON
 var userClicked = {lat: undefined, lng: undefined}
+var hasGuessed = false
 
 // async functions
 
@@ -170,6 +171,7 @@ onValue(refPlayers, (snapshot) => {
     var allGuessed = Object.values(players).every(player => player.guess.hasGuessed == true);
 
     if (allGuessed) {
+        hasGuessed = false
         map.entities.clear()
         addPushpin(street_view_location, "Position", "Gesuchter Ort", "X");
     for (var playerId in players) {
@@ -182,17 +184,15 @@ onValue(refPlayers, (snapshot) => {
         if (isHost) {
         const distance = Math.round(getDistance(street_view_location.latitude, street_view_location.longitude, player.guess.lat, player.guess.lng));
         const newScore = player.score + Math.max(0, 1000 - distance);
-        var scoreObj = {};
-        scoreObj['bingguesser/' + gameid + '/player/' + playerId] = {
+        set(child(refPlayers, playerId), {
             guess: {
                 hasGuessed: false,
                 lat: player.guess.lat,
                 lng: player.guess.lng
             },
             score: newScore,
-            isHost: isHost,
-        };
-        update(ref(db), scoreObj)};
+            isHost: player.isHost,
+        })};
     };
 }});
 
@@ -224,21 +224,19 @@ onValue(refGame, (snapshot) => {
     else if (round === 0) {
         for (var playerId in player) {
             if (isHost) {
-            var scoreObj = {};
-            scoreObj['bingguesser/' + gameid + '/player/' + playerId] = {
+            set(child(refPlayers, playerId), {
                 guess: {
                     hasGuessed: false,
                     lat: 0,
                     lng: 0
                 },
                 score: 0,
-                isHost: isHost,
-            };
-            update(ref(db), scoreObj)};
+                isHost: player[playerId].isHost,
+            });
         };
         document.getElementById("game").style.visibility = "visible"
         document.getElementById("endscreen").style.visibility = "hidden"
-    }
+    }};
 });
 
 // buttons
@@ -256,12 +254,21 @@ document.getElementById('toggle-map').addEventListener('click', function() {
 
 document.getElementById('guess-button').addEventListener('click', function() {
     if (userClicked.lat != undefined && userClicked.lng != undefined) {
+    if (!hasGuessed) {
+        hasGuessed = true
+        let audio = new Audio('/assets/audio/success.mp3');
+        audio.play();
+    };
     set(refPlayerGuess, {
         hasGuessed: true,
         lat: userClicked.lat,
         lng: userClicked.lng
     });
 }});
+
+document.getElementById('center-button').addEventListener('click', function() {
+    street_view.setView({ center: street_view_location});
+});
 
 function getDistance(lat1, lon1, lat2, lon2) {
     const R = 6371;
@@ -292,6 +299,16 @@ await getJSON().then(data => locationsJSON = data);
 
 document.getElementById('new-round-button').addEventListener('click', function() {
     const location = getRandomLocation()
+
+    get(refPlayers).then((snapshot) => {
+        let player = snapshot.val()
+        let playerKey = Object.keys(player)
+        playerKey.forEach(player => {
+            set(child(refPlayers, player+'/guess'), {
+                hasGuessed: false, lat: 0, lng: 0
+            })
+        });
+    });
 
     set(refLocation, {
         lat: location.lat+getRandomFloat(), lng: location.lng+getRandomFloat(), name: location.name

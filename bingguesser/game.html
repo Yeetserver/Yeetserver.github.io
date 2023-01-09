@@ -11,7 +11,7 @@
     <!-- Open Graph protocol -->
     <meta property="og:type" content="Website">
     <meta property="og:title" content="BINGGUESSER">
-    <meta property="og:description" content="Die Offizielle Website des Yeetserver's"/>
+    <meta property="og:description" content="Spieleinladung"/>
     <meta property="og:image" content="https://yeetserver.github.io/assets/images/index-icon.png"/>
     <!-- Website specific contents -->
     <script type='text/javascript' src='https://www.bing.com/api/maps/mapcontrol?key=Avk2HmoHkggKijHZuEtFe3viSHJLUSMRN5U-DFineKnojIJkPQ8n2ApVVz2Tit5d&callback=loadMapScenario'></script>
@@ -22,10 +22,7 @@
     <link rel="stylesheet" href="/bingguesser/src/game.css">
 </head>
 <body>
-<key id="key" style="display: none;"></key>
-
 <div id="game" style="visibility: hidden;">
-<p id="round-counter">Runde 0/0</p>
 
 <div class="streetview-class">
     <div id='street-view'></div>
@@ -33,15 +30,22 @@
 </div>
 
 <a id="mtos" href="https://go.microsoft.com/?linkid=9710837">Microsoft Terms of Service</a>
-  
+
 <div class="player-display">
-    Spieler:
+    <p>Spieler:</p>
     <ul class="player-list" id="player-list"></ul>
+</div>
+
+
+<div id="round-timer-display">
+    <p id="round-counter">Runde 0/0</p>
+    <p id="timer-display">Zeit: 0:00</p>
 </div>
 
 <div class="menu-div" id="menu-div">
     <button id="toggle-map">Karte Anzeigen</button>
     <button id="guess-button">Fertig 🗺</button>
+    <button id="center-button" style="text-decoration: line-through;">Zurück ♻</button>
     <div id="h-access"></div>
 </div>
 
@@ -54,6 +58,7 @@
     </div>
 </div>
 
+<key id="key" style="display: none;"></key>
 <script>if(window.location.search == ""){window.location.href=`${window.location.hostname}/bingguesser`}</script>
 <script>
 const acskey = getCookie("acskey")

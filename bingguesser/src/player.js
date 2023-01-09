@@ -37,19 +37,21 @@ onValue(refPlayer, (snapshot) => {
     if (snapshot.exists()) {isHost = snapshot.val().isHost} else {isHost = false}
 });
 
-function updatePlayerList(playerNames) {
-    const playerList = document.getElementById('score-list');
+function updatePlayerList(playerNames, snapshot) {
+    const playerList = document.getElementById('player-list');
     playerList.innerHTML = '';
     playerNames.forEach(playerName => {
-      const li = document.createElement('li');
-      li.textContent = playerName;
-      playerList.appendChild(li);
+        let name = playerName.substring(0, 10)
+        let score = snapshot[playerName]['score']
+        const li = document.createElement('li');
+        li.textContent = `${name} | ${score}`;
+        playerList.appendChild(li);
     });
 }
 
 onValue(refPlayers, (snapshot) => {
     if (!unloading) {
-    updatePlayerList(Object.keys(snapshot.val()))}
+    updatePlayerList(Object.keys(snapshot.val()), snapshot.val())}
 });
 
 onValue(ref(db, 'bingguesser'), (snapshot) => {
@@ -83,4 +85,4 @@ function onunload () {
     set(refPlayer, {})}
 };
 
-window.onunload = onunload;
+// window.onunload = onunload;
