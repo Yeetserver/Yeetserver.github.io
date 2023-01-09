@@ -68,7 +68,6 @@ set(child(refUsers, userid),{
   username: username,
   date: getCurrentDate()
 });
-alert("Erfolgreich Registriert")
 success()
 } else {
 let users = snapshot.val()
@@ -89,7 +88,6 @@ set(child(refUsers, userid),{
   date: getCurrentDate()
 });
 
-alert("Erfolgreich Registriert")
 success()
 }}})};
 
