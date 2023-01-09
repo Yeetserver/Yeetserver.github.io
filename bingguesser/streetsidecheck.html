@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="/src/dependencies/cookies.js"></script>
+    <!-- Titlebar -->
+    <link rel="shortcut icon" type="image/x-icon" href="https://cdn-icons-png.flaticon.com/128/3192/3192970.png"/>
+    <title>BINGGUESSER</title>
+    <!-- Open Graph protocol -->
+    <meta property="og:type" content="Website">
+    <meta property="og:title" content="BINGGUESSER">
+    <meta property="og:description" content="Streetsite Check"/>
+    <meta property="og:image" content="https://yeetserver.github.io/assets/images/index-icon.png"/>
+    <!-- Website specific contents -->
+    <script type='text/javascript' src='https://www.bing.com/api/maps/mapcontrol?key=Avk2HmoHkggKijHZuEtFe3viSHJLUSMRN5U-DFineKnojIJkPQ8n2ApVVz2Tit5d&callback=loadMapScenario'></script>
+</head>
+<body>
+
+<a href="https://www.latlong.net/" style="bottom: 0.5vw; position: absolute; font-size: xx-large;">LAT & LNG SUCHMASCHINE</a>
+<div id="location-input">
+    <input class="space" autocomplete="off" id="name" type="text" placeholder="Name">
+    <input class="space" id="lat" type="number" placeholder="Latitude" max="90" min="-90">
+    <input class="space" id="lng" type="number" placeholder="Longitude" max="180" min="-180">
+    <div class="space" id="buttons">
+        <button onclick="switchLocation()">Spawnen</button>
+        <button onclick="saveLocation()">Speichern</button>
+    </div>
+</div>
+
+<div id="location-list">
+    <p>Locations:</p>
+    <p id="list"></p>
+    <button onclick="copyLocations()" id="copy-list">Kopieren</button>
+</div>
+
+<div id='street-view'></div>
+
+<script defer>
+
+var street_view
+var street_view_location
+
+var map_location = {}
+var location_list = {}
+
+function switchLocation () {
+map_location = {name: document.getElementById("name").value, lat: document.getElementById("lat").value, lng: document.getElementById("lng").value,}
+
+street_view_location = new Microsoft.Maps.Location(map_location.lat, map_location.lng)
+
+street_view = new Microsoft.Maps.Map(document.getElementById('street-view'), {
+    center: street_view_location,
+    mapTypeId: Microsoft.Maps.MapTypeId.streetside,
+    showDashboard: false,
+    showTermsLink: false,
+    enableClickableLogo: false,
+    streetsideOptions: {
+        overviewMapMode: Microsoft.Maps.OverviewMapMode.hidden,
+        showCurrentAddress: false,
+        showProblemReporting: false,
+        showExitButton: false,
+        disablePanoramaNavigation: false,
+        panoramaLookupRadius: 10000,
+        showHeadingCompass: false,
+        showZoomButtons: false,
+        onSuccessLoading: function () {console.log('Streetside loaded'); saveLocation()},
+        onErrorLoading: function () {console.log('Birdseye loaded');}
+    }
+});
+};
+
+function saveLocation() {
+    location_list[map_location.name] = {"lat": map_location.lat, "lng": map_location.lng}
+    document.getElementById("list").innerText = JSON.stringify(location_list)
+}
+
+function copyLocations() {
+    navigator.clipboard.writeText(JSON.stringify(location_list))
+}
+
+</script>
+<style>
+body {
+    background-color: black;
+}
+
+#location-input {
+    display: inline;
+    position: absolute;
+    align-items: flex-start;
+    display: flex;
+    padding: 5px;
+    flex-direction: column;
+}
+
+.space {
+    margin-top: 5px;
+    margin-left: 5px;
+}
+
+#street-view {
+    position: absolute;
+    margin: auto;
+    border: 3px solid green;
+    padding: 10px;
+    top: 20vh;
+    left: 30vw;
+    width: 60vw;
+    height: 60vh;
+}
+
+#location-list {
+    color: white;
+    position: absolute;
+    margin: auto;
+    border: 3px solid green;
+    padding: 10px;
+    top: 20vh;
+    left: 0.5vw;
+    width: 20vw;
+    height: 60vh;
+    max-width: 20vw;
+    max-height: 60vh;
+}
+
+a:link {
+    text-decoration: none;
+    color: rgb(255, 217, 0);
+}
+a:visited {
+    color: rgb(255, 153, 0);
+}
+</style>
+</body>
+</html>
