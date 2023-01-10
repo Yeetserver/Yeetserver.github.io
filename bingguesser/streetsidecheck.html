@@ -18,88 +18,44 @@
 </head>
 <body>
 
-<a href="https://www.latlong.net/" style="bottom: 0.5vw; position: absolute; font-size: xx-large;">LAT & LNG SUCHMASCHINE</a>
 <div id="location-input">
     <input class="space" autocomplete="off" id="name" type="text" placeholder="Name">
-    <input class="space" id="lat" type="number" placeholder="Latitude" max="90" min="-90">
-    <input class="space" id="lng" type="number" placeholder="Longitude" max="180" min="-180">
-    <div class="space" id="buttons">
-        <button onclick="switchLocation()">Spawnen</button>
-        <button onclick="saveLocation()">Speichern</button>
-        <button onclick="loadExisting()">Laden</button>
-    </div>
+    <input class="space" id="lat" type="number" placeholder="Latitude" max="90" min="-90" step="0.0001">
+    <input class="space" id="lng" type="number" placeholder="Longitude" max="180" min="-180" step="0.0001">
 </div>
 
 <div id="location-list">
-    <p>Locations:</p>
+    <p>Deine Orte:</p>
     <p id="list"></p>
-    <button onclick="copyLocations()" id="copy-list">Kopieren</button>
+    <button onclick="copyLocations()" id="copy-list">Kopieren 📋</button>
 </div>
 
-<p id="existing-list"></p>
+<div id="existing-location-list">
+    <p>Gespeicherte Orte:</p>
+    <p id="existing-list"></p>
+    <button onclick="loadExisting()">Laden 💾</button>
+</div>
+
+
+<div id="map-elements">
+    <div style="flex-direction: row; display: inline-flex;">
+        <div class="space2" style="margin-top: 0.5%; position: relative;" id='searchBoxContainer'><input type='text' id='searchBox' autocomplete="off" placeholder="Ortsname"/></div>
+        <button class="space2" onclick="switchLocation()">Spawnen 🗺</button>
+        <button class="space2" onclick="saveLocation()">Speichern 💾</button> 
+    </div>
+    <div id='map'></div>
+</div>
+
 
 <div id='street-view'></div>
 
-<script defer>
-
-var street_view
-var street_view_location
-
-var map_location = {}
-var location_list = {}
-
-function switchLocation () {
-map_location = {name: document.getElementById("name").value, lat: document.getElementById("lat").value, lng: document.getElementById("lng").value,}
-
-street_view_location = new Microsoft.Maps.Location(map_location.lat, map_location.lng)
-
-street_view = new Microsoft.Maps.Map(document.getElementById('street-view'), {
-    center: street_view_location,
-    mapTypeId: Microsoft.Maps.MapTypeId.streetside,
-    showDashboard: false,
-    showTermsLink: false,
-    enableClickableLogo: false,
-    streetsideOptions: {
-        overviewMapMode: Microsoft.Maps.OverviewMapMode.hidden,
-        showCurrentAddress: false,
-        showProblemReporting: false,
-        showExitButton: false,
-        disablePanoramaNavigation: false,
-        panoramaLookupRadius: 10000,
-        showHeadingCompass: false,
-        showZoomButtons: false,
-        onSuccessLoading: function () {console.log('Streetside loaded')},
-        onErrorLoading: function () {console.log('Birdseye loaded')}
-    }
-});
-};
-
-function saveLocation() {
-    location_list[map_location.name] = {"lat": map_location.lat, "lng": map_location.lng};
-    document.getElementById("list").innerText = JSON.stringify(location_list);
-};
-
-function copyLocations() {
-    navigator.clipboard.writeText(JSON.stringify(location_list));
-};
-
-async function loadExisting () {
-    async function getJSON() {
-    try {
-      const response = await fetch('/bingguesser/src/locations.json');
-      return response.json();
-    } catch (error) {
-      console.error(error);
-    }
-    }
-document.getElementById("existing-list").innerText = Object.keys(await getJSON())
-}
-
-</script>
+<script src="/bingguesser/src/streetsidecheck.js" defer></script>
 <style>
 body {
     background-color: black;
 }
+
+
 
 #location-input {
     display: inline;
@@ -115,15 +71,38 @@ body {
     margin-left: 5px;
 }
 
+.space2 {
+    margin-bottom: 5px;
+    margin-left: 5px;
+}
+
 #street-view {
     position: absolute;
     margin: auto;
     border: 1px solid rgb(0, 110, 255);
     padding: 10px;
-    top: 20vh;
-    left: 25vw;
-    width: 50vw;
+    top: 2vh;
+    right: 1vw;
+    width: 60vw;
+    height: 30vh;
+}
+
+#map-elements {
+    position: absolute;
+    margin: auto;
+    padding: 10px;
+    top: 35vh;
+    right: 1vw;
+    width: 60vw;
     height: 60vh;
+    border: 1px solid rgb(0, 110, 255);
+    align-items: flex-start;
+    flex-direction: row;
+}
+
+#map {
+    height: 94%;
+    width: 100%;
 }
 
 #location-list {
@@ -132,35 +111,24 @@ body {
     margin: auto;
     border: 1px solid rgb(0, 110, 255);
     padding: 10px;
-    top: 20vh;
-    left: 0.5vw;
+    top: 35vh;
+    left: 19vw;
     width: 15vw;
     height: 60vh;
-    max-width: 15vw;
-    max-height: 60vh;
+    overflow-wrap: break-word;
 }
 
-#existing-list {
+#existing-location-list {
     color: white;
     position: absolute;
     margin: auto;
     border: 1px solid rgb(0, 110, 255);
     padding: 10px;
-    top: 20vh;
-    right: 0.5vw;
+    top: 35vh;
+    left: 1vw;
     width: 15vw;
     height: 60vh;
-    max-width: 15vw;
-    max-height: 60vh;
-    overflow-wrap:break-word;
-}
-
-a:link {
-    text-decoration: none;
-    color: rgb(255, 217, 0);
-}
-a:visited {
-    color: rgb(255, 153, 0);
+    overflow-wrap: break-word;
 }
 </style>
 </body>
