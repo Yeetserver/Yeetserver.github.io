@@ -22,6 +22,7 @@
     <input class="space" autocomplete="off" id="name" type="text" placeholder="Name">
     <input class="space" id="lat" type="number" placeholder="Latitude" max="90" min="-90" step="0.0001">
     <input class="space" id="lng" type="number" placeholder="Longitude" max="180" min="-180" step="0.0001">
+    <br>
 </div>
 
 <div id="location-list">
@@ -41,7 +42,7 @@
     <div style="flex-direction: row; display: inline-flex;">
         <div class="space2" style="margin-top: 0.5%; position: relative;" id='searchBoxContainer'><input type='text' id='searchBox' autocomplete="off" placeholder="Ortsname"/></div>
         <button class="space2" onclick="switchLocation()">Spawnen 🗺</button>
-        <button class="space2" onclick="saveLocation()">Speichern 💾</button> 
+        <button class="space2" onclick="saveLocation()">Speichern 💾</button>
     </div>
     <div id='map'></div>
 </div>
@@ -55,7 +56,23 @@ body {
     background-color: black;
 }
 
+/* ===== Scrollbar CSS ===== */
 
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+width: 10px;
+}
+
+*::-webkit-scrollbar-track {
+background: #000000;
+}
+
+*::-webkit-scrollbar-thumb {
+background-color: #49b7ee;
+border-radius: 10px;
+border: 3px solid #000000;
+max-height: 1px;
+}
 
 #location-input {
     display: inline;
@@ -79,12 +96,12 @@ body {
 #street-view {
     position: absolute;
     margin: auto;
-    border: 1px solid rgb(0, 110, 255);
+    border: 1px solid rgb(145, 145, 145);
     padding: 10px;
     top: 2vh;
     right: 1vw;
     width: 60vw;
-    height: 30vh;
+    height: 29.5vh;
 }
 
 #map-elements {
@@ -95,7 +112,7 @@ body {
     right: 1vw;
     width: 60vw;
     height: 60vh;
-    border: 1px solid rgb(0, 110, 255);
+    border: 1px solid rgb(145, 145, 145);
     align-items: flex-start;
     flex-direction: row;
 }
@@ -106,29 +123,33 @@ body {
 }
 
 #location-list {
-    color: white;
+    font-size: small;
+    color: rgb(180, 180, 180);
     position: absolute;
     margin: auto;
-    border: 1px solid rgb(0, 110, 255);
+    border: 1px solid rgb(145, 145, 145);
     padding: 10px;
-    top: 35vh;
+    top: 15vh;
     left: 19vw;
     width: 15vw;
-    height: 60vh;
+    height: 80vh;
     overflow-wrap: break-word;
+    overflow-y: scroll;
 }
 
 #existing-location-list {
-    color: white;
+    font-size: small;
+    color: rgb(180, 180, 180);
     position: absolute;
     margin: auto;
-    border: 1px solid rgb(0, 110, 255);
+    border: 1px solid rgb(145, 145, 145);
     padding: 10px;
-    top: 35vh;
+    top: 15vh;
     left: 1vw;
     width: 15vw;
-    height: 60vh;
+    height: 80vh;
     overflow-wrap: break-word;
+    overflow-y: scroll;
 }
 </style>
 </body>
