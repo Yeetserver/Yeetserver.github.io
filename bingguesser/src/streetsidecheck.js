@@ -6,6 +6,9 @@ var map
 var map_location = {}
 var location_list = {}
 
+var existing
+var mode = 0
+
 function switchLocation () {
 map_location = {name: document.getElementById("name").value, lat: document.getElementById("lat").value, lng: document.getElementById("lng").value,}
 
@@ -46,6 +49,7 @@ function loadMap() {
 map = new Microsoft.Maps.Map(document.getElementById('map'), {
     center: new Microsoft.Maps.Location(0, 0),
     mapTypeId: Microsoft.Maps.MapTypeId.canvasLight,
+    zoom: 0,
     showDashboard: false,
     showTermsLink: false,
     enableClickableLogo: false,
@@ -68,9 +72,11 @@ Microsoft.Maps.loadModule('Microsoft.Maps.AutoSuggest', function () {
     var manager = new Microsoft.Maps.AutosuggestManager(options);
     manager.attachAutosuggest('#searchBox', '#searchBoxContainer', selectedSuggestion);
 });
+
 };
 
 function selectedSuggestion(suggestionResult) {
+    map.entities.clear();
     map.setView({ bounds: suggestionResult.bestView });
     let location_name = suggestionResult.formattedSuggestion.split(",")
     addPushpin(suggestionResult.location, location_name[0], `${suggestionResult.location.latitude.toFixed(6)} ${suggestionResult.location.longitude.toFixed(6)}`)
@@ -88,8 +94,15 @@ function addPushpin(position, title, subtitle) {
 };
 
 function saveLocation() {
-    location_list[map_location.name] = {"lat": map_location.lat, "lng": map_location.lng};
-    document.getElementById("list").innerText = Object.keys(location_list);
+    let lat = document.getElementById("lat").value
+    let lng = document.getElementById("lng").value
+    let name = document.getElementById("name").value
+    if (name != "" && (lat != "" && lng != "")) {
+    if (!existing[name]) {
+    location_list[name] = {"lat": Number(lat), "lng": Number(lng)};
+    document.getElementById("list").innerText = `${Object.keys(location_list)} ~ ${Number(lat).toFixed(2)} ~ ${Number(lng).toFixed(2)}`;
+} else {alert("Dieser Ort ist bereits gespeichert")};
+} else {alert("Name, Latitude oder Longitude fehlt")};
 };
 
 function copyLocations() {
@@ -105,7 +118,8 @@ async function loadExisting () {
       console.error(error);
     }
 };
-document.getElementById("existing-list").innerText = Object.keys(await getJSON());
+existing = await getJSON()
+document.getElementById("existing-list").innerText = Object.keys(existing);
 loadMap()
 };
 
