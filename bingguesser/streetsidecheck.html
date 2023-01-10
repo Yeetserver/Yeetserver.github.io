@@ -68,20 +68,20 @@ street_view = new Microsoft.Maps.Map(document.getElementById('street-view'), {
         panoramaLookupRadius: 10000,
         showHeadingCompass: false,
         showZoomButtons: false,
-        onSuccessLoading: function () {console.log('Streetside loaded'); saveLocation()},
-        onErrorLoading: function () {console.log('Birdseye loaded');}
+        onSuccessLoading: function () {console.log('Streetside loaded')},
+        onErrorLoading: function () {console.log('Birdseye loaded')}
     }
 });
 };
 
 function saveLocation() {
-    location_list[map_location.name] = {"lat": map_location.lat, "lng": map_location.lng}
-    document.getElementById("list").innerText = JSON.stringify(location_list)
-}
+    location_list[map_location.name] = {"lat": map_location.lat, "lng": map_location.lng};
+    document.getElementById("list").innerText = JSON.stringify(location_list);
+};
 
 function copyLocations() {
-    navigator.clipboard.writeText(JSON.stringify(location_list))
-}
+    navigator.clipboard.writeText(JSON.stringify(location_list));
+};
 
 async function loadExisting () {
     async function getJSON() {
