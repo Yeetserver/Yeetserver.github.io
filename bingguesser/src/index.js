@@ -27,8 +27,9 @@ function host_game(gameid) {
     return new Promise((resolve, reject) => {
       set(ref(db, 'bingguesser/?'+gameid), {
         round: 0,
-        maxRounds: parseInt(document.getElementById("maxRounds").value),
-        difficulty: parseInt(document.getElementById("difficulty").value),
+        maxRounds: Number(document.getElementById("max-rounds-slider").value),
+        difficulty: Number(document.getElementById("difficulty").value),
+        time: Number(document.getElementById("time-slider").value)+1,
         location: {lat: 0, lng: 0, name: ""},
         player: {[playerName]:{
           isHost: true,

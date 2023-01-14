@@ -17,11 +17,21 @@ function getCookie(cname) {
       return c.substring(name.length, c.length);
     }}
     return "";
-}
+};
 
 function getRandomFloat () {
     if (Math.random() > 0.5) {return Math.random()/10}
     else {return -(Math.random()/10)};
+};
+
+function getDistance(lat1, lon1, lat2, lon2) {
+    const R = 6371;
+    const deg2rad = deg => deg * (Math.PI / 180);
+    const dLat = deg2rad(lat2 - lat1);
+    const dLon = deg2rad(lon2 - lon1);
+    const a = Math.sin(dLat / 2) ** 2 + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon / 2) ** 2;
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
 };
 
 async function getJSON() {
@@ -30,8 +40,7 @@ async function getJSON() {
       return response.json();
     } catch (error) {
       console.error(error);
-    }
-}
+}}
 
 const playerName = getCookie("username")
 const firebaseConfig = JSON.parse(document.getElementById("key").innerHTML)
@@ -60,36 +69,48 @@ var hasGuessed = false
 
 // async functions
 
-async function getHost() {
-    return new Promise((resolve) => {
-      onValue(refPlayer, (snapshot) => {
-        if (snapshot.exists()) {
-          resolve(snapshot.val().isHost)} else {
-          resolve(false);
-}})})};
 
-async function getMaxRounds() {
-    return new Promise((resolve) => {
-        onValue(refGame, (snapshot) => {
-        resolve(snapshot.val().maxRounds)}
-)})};
+async function timeProcessor (inptime) {
+    let time = Number(inptime)
+    if (Number.isInteger(time/10))  {};
 
-async function getRound() {
-    return new Promise((resolve) => {
-        onValue(refGame, (snapshot) => {
-        resolve(snapshot.val().round)}
-)})};
+    console.log(time);
+    let minutes = Math.floor(time / 60);
+    let seconds = time % 60;
 
-async function getDifficulty() {
-    return new Promise((resolve) => {
-        onValue(refGame, (snapshot) => {
-        resolve(snapshot.val().difficulty)}
-)})};
+    document.getElementById("timer-display").innerHTML = `Zeit: ${minutes}:${seconds.toString().padStart(2, '0')}`;
 
-var maxRounds = await getMaxRounds();
-var round = await getRound();
-var difficulty = await getDifficulty();
-var isHost = await getHost();
+    if (time <= 0) {
+        userClicked = {lat: 0, lng: 0};
+        guess()
+    }
+}
+
+var timerInterval
+
+async function setTimer (seconds) {
+    clearInterval(timerInterval);
+    const time = Number(seconds) * 1000
+    timerInterval = setInterval(() => timeProcessor(Math.abs(--seconds)), 1000);
+    await new Promise(resolve => setTimeout(resolve, time));
+    clearInterval(timerInterval);
+};
+
+async function getData(reference, element) {
+    return new Promise((resolve) => {
+        get(child(reference, element)).then((snapshot) => {
+            if (snapshot.exists()) {
+            resolve(snapshot.val());
+            } else {resolve(false);}
+        });
+})};
+
+const maxRounds = await getData(refGame, 'maxRounds');
+const timerTime = await getData(refGame, 'time');
+
+var difficulty = await getData(refGame, 'difficulty');
+var isHost = await getData(refPlayer, 'isHost');
+var round = await getData(refGame, 'round');
 
 // functions
 
@@ -145,6 +166,8 @@ function newRound(lat, lng) {
     });
 
     document.getElementById("street-view").style.visibility = "visible";
+
+    setTimer(timerTime)
 };
 
 function addPushpin(position, title, subtitle, text) {
@@ -172,11 +195,13 @@ onValue(refPlayers, (snapshot) => {
 
     if (allGuessed) {
         hasGuessed = false
-        map.entities.clear()
+        map.entities.clear();
         addPushpin(street_view_location, "Position", "Gesuchter Ort", "X");
     for (var playerId in players) {
         var player = players[playerId];
         var guess = new Microsoft.Maps.Location(player.guess.lat, player.guess.lng);
+        
+        if (players[playerId]['guess'].lat != 0 || players[playerId]['guess'].lat != 0) {
 
         addPushpin(guess, "Guess", playerId, "O");
         addPolyline([street_view_location, guess], "red", 1);
@@ -192,7 +217,7 @@ onValue(refPlayers, (snapshot) => {
             },
             score: newScore,
             isHost: player.isHost,
-        })};
+        })};}
     };
 }});
 
@@ -209,7 +234,6 @@ onValue(refGame, (snapshot) => {
     }
     if (round > maxRounds) {
         document.getElementById("game").style.visibility = "hidden"
-        document.getElementById("street-view").style.visibility = "hidden"
         document.getElementById("endscreen").style.visibility = "visible"
         
         let playerList = document.getElementById('score-list');
@@ -221,22 +245,22 @@ onValue(refGame, (snapshot) => {
             playerList.appendChild(li);
         });
     }
-    else if (round === 0) {
-        for (var playerId in player) {
-            if (isHost) {
-            set(child(refPlayers, playerId), {
-                guess: {
-                    hasGuessed: false,
-                    lat: 0,
-                    lng: 0
-                },
-                score: 0,
-                isHost: player[playerId].isHost,
-            });
-        };
+    else if (round == 0) {
+        if (isHost) {
+            for (var playerId in player) {
+                set(child(refPlayers, playerId), {
+                    guess: {
+                        hasGuessed: false,
+                        lat: 0,
+                        lng: 0
+                    },
+                    score: 0,
+                    isHost: player[playerId].isHost,
+                });
+        }};
         document.getElementById("game").style.visibility = "visible"
         document.getElementById("endscreen").style.visibility = "hidden"
-    }};
+    };
 });
 
 // buttons
@@ -252,33 +276,28 @@ document.getElementById('toggle-map').addEventListener('click', function() {
     }
 });
 
-document.getElementById('guess-button').addEventListener('click', function() {
+function guess() {
     if (userClicked.lat != undefined && userClicked.lng != undefined) {
-    if (!hasGuessed) {
-        hasGuessed = true
-        let audio = new Audio('/assets/audio/success.mp3');
-        audio.play();
-    };
-    set(refPlayerGuess, {
-        hasGuessed: true,
-        lat: userClicked.lat,
-        lng: userClicked.lng
-    });
-}});
+        if (!hasGuessed) {
+            hasGuessed = true
+            let audio = new Audio('/assets/audio/success.mp3');
+            audio.play();
+        };
+        set(refPlayerGuess, {
+            hasGuessed: true,
+            lat: userClicked.lat,
+            lng: userClicked.lng
+        });
+    }
+}
+
+document.getElementById('guess-button').addEventListener('click', function() {
+    guess()
+});
 
 document.getElementById('center-button').addEventListener('click', function() {
     street_view.setView({ center: street_view_location});
 });
-
-function getDistance(lat1, lon1, lat2, lon2) {
-    const R = 6371;
-    const deg2rad = deg => deg * (Math.PI / 180);
-    const dLat = deg2rad(lat2 - lat1);
-    const dLon = deg2rad(lon2 - lon1);
-    const a = Math.sin(dLat / 2) ** 2 + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon / 2) ** 2;
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c;
-}
 
 document.getElementById("round-counter").innerText = `Runde ${round}/${maxRounds}`
 document.getElementById("game").style.visibility = "visible"
@@ -295,7 +314,12 @@ new_round_button.type = "button";
 new_round_button.innerText = "Nächste Runde";
 host_div.appendChild(new_round_button);
 
-await getJSON().then(data => locationsJSON = data);
+const endscreen_div = document.getElementById("endscreen");
+const restart_button = document.createElement("restart-button");
+restart_button.id = "restart-button";
+restart_button.type = "button";
+restart_button.innerText = "Neustarten";
+endscreen_div.appendChild(restart_button);
 
 document.getElementById('new-round-button').addEventListener('click', function() {
     const location = getRandomLocation()
@@ -319,15 +343,10 @@ document.getElementById('new-round-button').addEventListener('click', function()
     });
 });
 
-const endscreen_div = document.getElementById("endscreen");
-const restart_button = document.createElement("restart-button");
-restart_button.id = "restart-button";
-restart_button.type = "button";
-restart_button.innerText = "Neustarten";
-endscreen_div.appendChild(restart_button);
+document.getElementById('restart-button').addEventListener('click', function() {
+    set(child(refGame, 'round'), 0);
+})
 
 await getJSON().then(data => locationsJSON = data);
 
-document.getElementById('restart-button').addEventListener('click', function() {
-    set(child(refGame, 'round'), 0);
-})};
+};

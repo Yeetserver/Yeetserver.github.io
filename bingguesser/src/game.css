@@ -86,7 +86,7 @@ button:active {
 /* Misc */
 
 #round-timer-display {
-    align-items:flex-start;
+    align-items:flex-end;
     flex-direction: column;
     position: absolute;
     top: 0.5vh;
