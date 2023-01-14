@@ -94,8 +94,12 @@ button:active {
     user-select: none;
     display: inline-flex;
     font-size: x-large;
-    color: rgb(255, 255, 255);
+}
+
+#round-timer-display, .player-display {
     font-family: Arial, Helvetica, sans-serif;
+    color: white;
+    text-shadow: -0.5px -0.5px 0 #000, 0.5px -0.5px 0 #000, -0.5px 0.5px 0 #000, 0.5px 0.5px 0 #000;
 }
 
 #mtos {
@@ -157,7 +161,6 @@ button:active {
 
 .score-list li {
     font-size: medium;
-    color: rgb(255, 255, 255);
     padding: 5px;
     background-color: #272727;
     border-radius: 1px;

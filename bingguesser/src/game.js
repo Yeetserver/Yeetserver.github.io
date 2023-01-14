@@ -78,7 +78,7 @@ async function timeProcessor (inptime) {
     let minutes = Math.floor(time / 60);
     let seconds = time % 60;
 
-    document.getElementById("timer-display").innerHTML = `Zeit: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+    document.getElementById("timer-display").innerHTML = `Verbleibende Zeit: ${minutes}:${seconds.toString().padStart(2, '0')}`;
 
     if (time <= 0) {
         userClicked = {lat: 0, lng: 0};
@@ -277,6 +277,8 @@ document.getElementById('toggle-map').addEventListener('click', function() {
 });
 
 function guess() {
+    clearInterval(timerInterval)
+    document.getElementById("timer-display").innerHTML = 'Vebleibende Zeit: 0:00';
     if (userClicked.lat != undefined && userClicked.lng != undefined) {
         if (!hasGuessed) {
             hasGuessed = true
