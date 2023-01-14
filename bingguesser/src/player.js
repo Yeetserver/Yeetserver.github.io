@@ -85,4 +85,4 @@ function onunload () {
     set(refPlayer, {})}
 };
 
-// window.onunload = onunload;
+window.onunload = onunload;
