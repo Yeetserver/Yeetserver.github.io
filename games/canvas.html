@@ -25,11 +25,11 @@
 <canvas id="canvas"></canvas>
 
 <div class="buttons">
-<input id="saveButton" class="button" type="image" src="https://cdn-icons-png.flaticon.com/128/439/439894.png"/>
-<input id="loadButton" class="button" type="image" src="https://cdn-icons-png.flaticon.com/128/3121/3121602.png"/>
 <input id="clearButton" class="button" type="image" src="https://cdn-icons-png.flaticon.com/128/484/484560.png"/>
 <input id="colorChooser" class="button" type="color" src="https://cdn-icons-png.flaticon.com/128/3214/3214398.png"/>
+<input id="sizeSelect" type="number" min="0.1" max="2" step="0.1" src="https://cdn-icons-png.flaticon.com/128/3214/3214398.png"/>
 </div>
+
 <style>
 body {
   justify-items: center ;
@@ -47,12 +47,16 @@ canvas {
   image-rendering: pixelated;
 }
 .buttons {
-  position:absolute;
-  left:10px;
-  top:10px;
+  position: absolute;
+  left: 10px;
+  top: 10px;
 }
 .button {
   height: 40px;
+  width: 40px;
+}
+#sizeSelect {
+  height: 30px;
   width: 40px;
 }
 </style>
@@ -66,6 +70,7 @@ canvas {
   
   document.getElementById("key").innerHTML = acskeyDcrStr
 </script>
+
 <script defer type="module">
 function getCookie(cname) {
     let name = cname + '=';
@@ -104,8 +109,18 @@ function changeColor () {
   ctx.strokeStyle = document.getElementById('colorChooser').value
 }
 
+function changeSize() {
+  let size = Number(document.getElementById("sizeSelect").value)
+  if (size < 0.1 || size > 2) {
+    size = 1
+    document.getElementById("sizeSelect").value = size
+  }
+  ctx.lineWidth = size
+}
+
 function clearCanvas() {
   ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height)
+  save()
 }
 
 // style settings
@@ -113,6 +128,7 @@ ctx.lineWidth = 1;
 ctx.lineCap = 'square';
 ctx.strokeStyle = '#00aaff';
 document.getElementById('colorChooser').value = '#00aaff'
+document.getElementById("sizeSelect").value = 1
 
 // track the previous position of the mouse
 
@@ -129,8 +145,7 @@ function drawLine(x1, y1, x2, y2) {
     ctx.lineTo(x2, y2);
     ctx.stroke();
   }
-}
-
+};
 
 let isDrawing = false;
 let lastX;
@@ -154,31 +169,34 @@ canvas.addEventListener('mousemove', e => {
 });
 
 canvas.addEventListener('mouseup', () => isDrawing = false);
+canvas.addEventListener('mouseup', save);
 
 document.getElementById('clearButton').addEventListener('click', clearCanvas);
-document.getElementById('saveButton').addEventListener('click', save);
-document.getElementById('loadButton').addEventListener('click', load);
 document.getElementById('colorChooser').addEventListener('change', changeColor);
+document.getElementById('sizeSelect').addEventListener('change', changeSize);
+
 
 // database
 
 function save () {
-  var data = canvas.toDataURL();
-  set(refGame, {
-  canvas: data,
-  enabled: true
-  })
-}
+  set(child(refGame, 'canvas'), canvas.toDataURL())
+};
 
-function load () {
-  clearCanvas()
-  onValue(refGame, (snapshot) => {
-  var img = new Image;
-  img.onload = function(){
-    ctx.drawImage(img,0,0); // Or at whatever offset you like
+function drawImg(src) {
+  let image = new Image;
+  image.src = src;
+  image.onload = function() {
+    ctx.drawImage(image, 0, 0);
   };
-  img.src = snapshot.val().canvas
-})};
+  ctx.clearRect(0, 0, ctx.canvas.width,ctx.canvas.height);
+};
+
+onValue(refGame, (snapshot) => {
+  let canvas_img = snapshot.val().canvas
+  if (canvas_img != canvas.toDataURL()) {
+    drawImg(canvas_img);
+  }
+});
 
 onValue(refGame, (snapshot) => {
   if (snapshot.val().enabled != undefined) {
