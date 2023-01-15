@@ -60,29 +60,33 @@ const refPlayerGuess = ref(db, 'bingguesser/' + gameid + '/player/' + playerName
 
 var street_view_location
 var center_map_location
-
 var map
 var street_view
 var locationsJSON
 var userClicked = {lat: undefined, lng: undefined}
 var hasGuessed = false
+var roundOver = false
+var timeRanOut = false
 
 // async functions
 
 
 async function timeProcessor (inptime) {
     let time = Number(inptime)
-    if (Number.isInteger(time/10))  {};
 
-    console.log(time);
     let minutes = Math.floor(time / 60);
     let seconds = time % 60;
 
     document.getElementById("timer-display").innerHTML = `Verbleibende Zeit: ${minutes}:${seconds.toString().padStart(2, '0')}`;
 
-    if (time <= 0) {
-        userClicked = {lat: 0, lng: 0};
-        guess()
+    if (time < 1) {
+        clearInterval(timerInterval)
+        if (!hasGuessed && !roundOver) {
+            timeRanOut = true
+            userClicked = {lat: 0, lng: 0};
+            guess();
+            timeRanOut = false
+        }
     }
 }
 
@@ -108,7 +112,6 @@ async function getData(reference, element) {
 const maxRounds = await getData(refGame, 'maxRounds');
 const timerTime = await getData(refGame, 'time');
 
-var difficulty = await getData(refGame, 'difficulty');
 var isHost = await getData(refPlayer, 'isHost');
 var round = await getData(refGame, 'round');
 
@@ -128,7 +131,6 @@ function newRound(lat, lng) {
 
     map = new Microsoft.Maps.Map(document.getElementById('map'), {
         center: center_map_location,
-        zoom: Math.max(0, 2 - difficulty),
         showDashboard: false,
         enableClickableLogo: false,
         showTermsLink: false,
@@ -156,6 +158,7 @@ function newRound(lat, lng) {
     });
 
     Microsoft.Maps.Events.addHandler(map, 'click', function(e) {
+        if (!roundOver) {
         var clickedAt = new Microsoft.Maps.Point(e.getX(), e.getY());
         var location = e.target.tryPixelToLocation(clickedAt);
         var map_location = new Microsoft.Maps.Location(location.latitude, location.longitude);
@@ -163,7 +166,7 @@ function newRound(lat, lng) {
         addPushpin(map_location, "Guess", "Dein Guess", "O");
 
         userClicked = {lat: location.latitude, lng: location.longitude};
-    });
+    }});
 
     document.getElementById("street-view").style.visibility = "visible";
 
@@ -194,21 +197,27 @@ onValue(refPlayers, (snapshot) => {
     var allGuessed = Object.values(players).every(player => player.guess.hasGuessed == true);
 
     if (allGuessed) {
+        if (Math.round(getDistance(street_view_location.latitude, street_view_location.longitude, userClicked.lat, userClicked.lng)) > 6000 || (userClicked.lat == 0 && userClicked.lng)) {
+            let sound_fail = new Audio('/assets/audio/fail.mp3');
+            sound_fail.play();
+        };
+        roundOver = true
         hasGuessed = false
         map.entities.clear();
         addPushpin(street_view_location, "Position", "Gesuchter Ort", "X");
     for (var playerId in players) {
-        var player = players[playerId];
-        var guess = new Microsoft.Maps.Location(player.guess.lat, player.guess.lng);
+        let player = players[playerId];
+        let guess = new Microsoft.Maps.Location(player.guess.lat, player.guess.lng);
         
-        if (players[playerId]['guess'].lat != 0 || players[playerId]['guess'].lat != 0) {
+        const distance = Math.round(getDistance(street_view_location.latitude, street_view_location.longitude, player.guess.lat, player.guess.lng));
 
-        addPushpin(guess, "Guess", playerId, "O");
+        if (player.guess.lat != 0 || player.guess.lng != 0) {
+
+        addPushpin(guess, playerId, `${distance}km entfernt`, String(playerId).charAt(0).toUpperCase());
         addPolyline([street_view_location, guess], "red", 1);
 
         if (isHost) {
-        const distance = Math.round(getDistance(street_view_location.latitude, street_view_location.longitude, player.guess.lat, player.guess.lng));
-        const newScore = player.score + Math.max(0, 1000 - distance);
+        let newScore = player.score + Math.max(0, 1000 - distance);
         set(child(refPlayers, playerId), {
             guess: {
                 hasGuessed: false,
@@ -226,11 +235,19 @@ onValue(refGame, (snapshot) => {
     let dbRound = snapshot.val().round
     if (round != dbRound) {
         round = dbRound
+        roundOver = false
+        clearInterval(timerInterval);
+        
         document.getElementById("round-counter").innerText = `Runde ${round}/${maxRounds}`
+
         if (round <= maxRounds) {
             const location = snapshot.val().location;
             newRound(location.lat, location.lng)
+
+            let sound_start = new Audio('/assets/audio/start.mp3');
+            sound_start.play();
         }
+        else {document.getElementById("round-counter").innerText = ``};
     }
     if (round > maxRounds) {
         document.getElementById("game").style.visibility = "hidden"
@@ -277,13 +294,12 @@ document.getElementById('toggle-map').addEventListener('click', function() {
 });
 
 function guess() {
-    clearInterval(timerInterval)
-    document.getElementById("timer-display").innerHTML = 'Vebleibende Zeit: 0:00';
     if (userClicked.lat != undefined && userClicked.lng != undefined) {
-        if (!hasGuessed) {
+        if (!hasGuessed && !roundOver) {
             hasGuessed = true
-            let audio = new Audio('/assets/audio/success.mp3');
-            audio.play();
+            if (!timeRanOut) {
+            let sound_success = new Audio('/assets/audio/success.mp3');
+            sound_success.play()}
         };
         set(refPlayerGuess, {
             hasGuessed: true,

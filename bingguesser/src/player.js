@@ -72,6 +72,7 @@ onValue(ref(db, 'bingguesser'), (snapshot) => {
 onValue(refPlayers, (snapshot) => {
     if ((!Object.keys(snapshot.val()).includes(playerName)) && (unloading == false)) {
         set(refPlayer, {
+            isHost: false,
             score: 0,
             guess: {hasGuessed: false, lat: 0, lng: 0}
         })}
