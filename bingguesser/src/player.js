@@ -33,10 +33,6 @@ const refGame = ref(db, 'bingguesser/' + gameid); // reference to the game
 const refPlayers = ref(db, 'bingguesser/' + gameid + '/player'); // reference to all players
 const refPlayer = ref(db, 'bingguesser/' + gameid + '/player/' + playerName); // reference to a specific player
 
-onValue(refPlayer, (snapshot) => {
-    if (snapshot.exists()) {isHost = snapshot.val().isHost} else {isHost = false}
-});
-
 function updatePlayerList(playerNames, snapshot) {
     const playerList = document.getElementById('player-list');
     playerList.innerHTML = '';
@@ -50,8 +46,17 @@ function updatePlayerList(playerNames, snapshot) {
 }
 
 onValue(refPlayers, (snapshot) => {
+    if (snapshot.exists() && isHost == undefined) {isHost = snapshot.val().isHost} else {isHost = false};
+
+    if ((!Object.keys(snapshot.val()).includes(playerName)) && (unloading == false)) {
+        set(refPlayer, {
+            isHost: false,
+            score: 0,
+            guess: {hasGuessed: false, lat: 0, lng: 0}
+    })};
+
     if (!unloading) {
-    updatePlayerList(Object.keys(snapshot.val()), snapshot.val())}
+    updatePlayerList(Object.keys(snapshot.val()), snapshot.val())};
 });
 
 onValue(ref(db, 'bingguesser'), (snapshot) => {
@@ -67,15 +72,6 @@ onValue(ref(db, 'bingguesser'), (snapshot) => {
         console.log(1);
         window.location.href = window.location.origin + "/bingguesser/?Es!gibt!kein!Spiel!mit!dieser!id"
     }
-});
-
-onValue(refPlayers, (snapshot) => {
-    if ((!Object.keys(snapshot.val()).includes(playerName)) && (unloading == false)) {
-        set(refPlayer, {
-            isHost: false,
-            score: 0,
-            guess: {hasGuessed: false, lat: 0, lng: 0}
-        })}
 });
 
 function onunload () {

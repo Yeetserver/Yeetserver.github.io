@@ -80,14 +80,27 @@ async function timeProcessor (inptime) {
     document.getElementById("timer-display").innerHTML = `Verbleibende Zeit: ${minutes}:${seconds.toString().padStart(2, '0')}`;
 
     if (time < 1) {
-        clearInterval(timerInterval)
-        if (!hasGuessed && !roundOver) {
+        clearInterval(timerInterval);
+        document.getElementById("timer-display").innerHTML = 'Verbleibende Zeit: 0:00';
+        if (!hasGuessed || !roundOver) {
             timeRanOut = true
             userClicked = {lat: 0, lng: 0};
             guess();
             timeRanOut = false
         }
     }
+}
+
+function guess() {
+    if (userClicked.lat == undefined && userClicked.lng == undefined) {userClicked = {lat: 0, lng: 0}}
+    
+    if ((!roundOver && !timeRanOut) && (userClicked.lat != 0 && userClicked.lng != 0)) {
+        if (!hasGuessed) {
+            let sound_success = new Audio('/assets/audio/success.mp3');
+            sound_success.play()};
+        hasGuessed = true
+        set(refPlayerGuess, {hasGuessed: true, lat: userClicked.lat, lng: userClicked.lng})
+    } else if (!roundOver && timeRanOut) {set(refPlayerGuess, {hasGuessed: true, lat: 0, lng: 0})}
 }
 
 var timerInterval
@@ -127,10 +140,8 @@ function newRound(lat, lng) {
 
     street_view_location = new Microsoft.Maps.Location(lat, lng)
 
-    center_map_location = new Microsoft.Maps.Location(lat+Math.random(), lng+Math.random())
-
     map = new Microsoft.Maps.Map(document.getElementById('map'), {
-        center: center_map_location,
+        zoom: 1,
         showDashboard: false,
         enableClickableLogo: false,
         showTermsLink: false,
@@ -152,8 +163,8 @@ function newRound(lat, lng) {
             panoramaLookupRadius: 10000,
             showHeadingCompass: false,
             showZoomButtons: false,
-            onSuccessLoading: function () {console.log('Streetside loaded')},
-            onErrorLoading: function () {console.log('Birdseye loaded')}
+            onSuccessLoading: function () {},
+            onErrorLoading: function () {}
         }
     });
 
@@ -193,11 +204,11 @@ function addPolyline(position, color, thickness) {
 // onvalue refs
 
 onValue(refPlayers, (snapshot) => {
-    var players = snapshot.val();
-    var allGuessed = Object.values(players).every(player => player.guess.hasGuessed == true);
+    let players = snapshot.val();
+    let allGuessed = Object.values(players).every(player => player.guess.hasGuessed == true);
 
     if (allGuessed) {
-        if (Math.round(getDistance(street_view_location.latitude, street_view_location.longitude, userClicked.lat, userClicked.lng)) > 6000 || (userClicked.lat == 0 && userClicked.lng)) {
+        if (Math.round(getDistance(street_view_location.latitude, street_view_location.longitude, userClicked.lat, userClicked.lng)) > 10000 || (userClicked.lat == 0 && userClicked.lng == 0)) {
             let sound_fail = new Audio('/assets/audio/fail.mp3');
             sound_fail.play();
         };
@@ -205,28 +216,30 @@ onValue(refPlayers, (snapshot) => {
         hasGuessed = false
         map.entities.clear();
         addPushpin(street_view_location, "Position", "Gesuchter Ort", "X");
-    for (var playerId in players) {
+    for (let playerId in players) {
         let player = players[playerId];
         let guess = new Microsoft.Maps.Location(player.guess.lat, player.guess.lng);
         
-        const distance = Math.round(getDistance(street_view_location.latitude, street_view_location.longitude, player.guess.lat, player.guess.lng));
+        let distance = Math.round(getDistance(street_view_location.latitude, street_view_location.longitude, player.guess.lat, player.guess.lng));
 
-        if (player.guess.lat != 0 || player.guess.lng != 0) {
-
+        if (player.guess.lat != 0 && player.guess.lng != 0) {
         addPushpin(guess, playerId, `${distance}km entfernt`, String(playerId).charAt(0).toUpperCase());
         addPolyline([street_view_location, guess], "red", 1);
-
+        };
+        
         if (isHost) {
         let newScore = player.score + Math.max(0, 1000 - distance);
         set(child(refPlayers, playerId), {
             guess: {
                 hasGuessed: false,
-                lat: player.guess.lat,
-                lng: player.guess.lng
+                lat: 0,
+                lng: 0
             },
             score: newScore,
             isHost: player.isHost,
-        })};}
+        })
+    };
+    
     };
 }});
 
@@ -292,22 +305,6 @@ document.getElementById('toggle-map').addEventListener('click', function() {
         element.style.visibility = "hidden";
     }
 });
-
-function guess() {
-    if (userClicked.lat != undefined && userClicked.lng != undefined) {
-        if (!hasGuessed && !roundOver) {
-            hasGuessed = true
-            if (!timeRanOut) {
-            let sound_success = new Audio('/assets/audio/success.mp3');
-            sound_success.play()}
-        };
-        set(refPlayerGuess, {
-            hasGuessed: true,
-            lat: userClicked.lat,
-            lng: userClicked.lng
-        });
-    }
-}
 
 document.getElementById('guess-button').addEventListener('click', function() {
     guess()
