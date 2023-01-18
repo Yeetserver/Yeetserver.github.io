@@ -59,7 +59,7 @@ const refPlayerGuess = ref(db, 'bingguesser/' + gameid + '/player/' + playerName
 // global vars
 
 var street_view_location
-var center_map_location
+var spawn_location
 var map
 var street_view
 var locationsJSON
@@ -67,6 +67,7 @@ var userClicked = {lat: undefined, lng: undefined}
 var hasGuessed = false
 var roundOver = false
 var timeRanOut = false
+var timerInterval
 
 // async functions
 
@@ -93,24 +94,22 @@ async function timeProcessor (inptime) {
 
 function guess() {
     if (userClicked.lat == undefined && userClicked.lng == undefined) {userClicked = {lat: 0, lng: 0}}
-    
+
     if ((!roundOver && !timeRanOut) && (userClicked.lat != 0 && userClicked.lng != 0)) {
         if (!hasGuessed) {
             let sound_success = new Audio('/assets/audio/success.mp3');
             sound_success.play()};
+        set(refPlayerGuess, {hasGuessed: true, lat: userClicked.lat, lng: userClicked.lng});
+        userClicked = {lat: 0, lng: 0};
         hasGuessed = true
-        set(refPlayerGuess, {hasGuessed: true, lat: userClicked.lat, lng: userClicked.lng})
     } else if (!roundOver && timeRanOut) {set(refPlayerGuess, {hasGuessed: true, lat: 0, lng: 0})}
 }
-
-var timerInterval
 
 async function setTimer (seconds) {
     clearInterval(timerInterval);
     const time = Number(seconds) * 1000
     timerInterval = setInterval(() => timeProcessor(Math.abs(--seconds)), 1000);
     await new Promise(resolve => setTimeout(resolve, time));
-    clearInterval(timerInterval);
 };
 
 async function getData(reference, element) {
@@ -125,7 +124,7 @@ async function getData(reference, element) {
 const maxRounds = await getData(refGame, 'maxRounds');
 const timerTime = await getData(refGame, 'time');
 
-var isHost = await getData(refPlayer, 'isHost');
+const isHost = await getData(refPlayer, 'isHost');
 var round = await getData(refGame, 'round');
 
 // functions
@@ -139,6 +138,7 @@ function newRound(lat, lng) {
     document.getElementById("street-view").style.visibility = "hidden";
 
     street_view_location = new Microsoft.Maps.Location(lat, lng)
+    spawn_location = new Microsoft.Maps.Location(lat, lng)
 
     map = new Microsoft.Maps.Map(document.getElementById('map'), {
         zoom: 1,
@@ -163,7 +163,7 @@ function newRound(lat, lng) {
             panoramaLookupRadius: 10000,
             showHeadingCompass: false,
             showZoomButtons: false,
-            onSuccessLoading: function () {},
+            onSuccessLoading: function () {spawn_location = street_view.getCenter()},
             onErrorLoading: function () {}
         }
     });
@@ -208,23 +208,23 @@ onValue(refPlayers, (snapshot) => {
     let allGuessed = Object.values(players).every(player => player.guess.hasGuessed == true);
 
     if (allGuessed) {
-        if (Math.round(getDistance(street_view_location.latitude, street_view_location.longitude, userClicked.lat, userClicked.lng)) > 10000 || (userClicked.lat == 0 && userClicked.lng == 0)) {
+        if (Math.round(getDistance(spawn_location.latitude, spawn_location.longitude, userClicked.lat, userClicked.lng)) > 10000 || (userClicked.lat == 0 && userClicked.lng == 0)) {
             let sound_fail = new Audio('/assets/audio/fail.mp3');
             sound_fail.play();
         };
         roundOver = true
         hasGuessed = false
         map.entities.clear();
-        addPushpin(street_view_location, "Position", "Gesuchter Ort", "X");
+        addPushpin(spawn_location, "Position", "Gesuchter Ort", "X");
     for (let playerId in players) {
         let player = players[playerId];
         let guess = new Microsoft.Maps.Location(player.guess.lat, player.guess.lng);
         
-        let distance = Math.round(getDistance(street_view_location.latitude, street_view_location.longitude, player.guess.lat, player.guess.lng));
+        let distance = Math.round(getDistance(spawn_location.latitude, spawn_location.longitude, player.guess.lat, player.guess.lng));
 
         if (player.guess.lat != 0 && player.guess.lng != 0) {
         addPushpin(guess, playerId, `${distance}km entfernt`, String(playerId).charAt(0).toUpperCase());
-        addPolyline([street_view_location, guess], "red", 1);
+        addPolyline([spawn_location, guess], "red", 1);
         };
         
         if (isHost) {
@@ -237,10 +237,8 @@ onValue(refPlayers, (snapshot) => {
             },
             score: newScore,
             isHost: player.isHost,
-        })
-    };
-    
-    };
+        });
+    }};
 }});
 
 onValue(refGame, (snapshot) => {
@@ -263,6 +261,7 @@ onValue(refGame, (snapshot) => {
         else {document.getElementById("round-counter").innerText = ``};
     }
     if (round > maxRounds) {
+        clearInterval(timerInterval)
         document.getElementById("game").style.visibility = "hidden"
         document.getElementById("endscreen").style.visibility = "visible"
         
@@ -311,7 +310,7 @@ document.getElementById('guess-button').addEventListener('click', function() {
 });
 
 document.getElementById('center-button').addEventListener('click', function() {
-    street_view.setView({ center: street_view_location});
+    street_view.setView({ center: spawn_location});
 });
 
 document.getElementById("round-counter").innerText = `Runde ${round}/${maxRounds}`
@@ -322,19 +321,17 @@ document.getElementById("game").style.visibility = "visible"
 if (isHost) {
 console.log("You're hosting this game 🚩");
 
-const host_div = document.getElementById("h-access");
-const new_round_button = document.createElement("new-round-button");
-new_round_button.id = "new-round-button";
-new_round_button.type = "button";
-new_round_button.innerText = "Nächste Runde";
-host_div.appendChild(new_round_button);
+function addButton(div, id, text) {
+    let divElement = document.getElementById(div);
+    let buttonElement = document.createElement(id);
+    buttonElement.type = 'button';
+    buttonElement.id = id;
+    buttonElement.innerText = text;
+    divElement.appendChild(buttonElement);
+}
 
-const endscreen_div = document.getElementById("endscreen");
-const restart_button = document.createElement("restart-button");
-restart_button.id = "restart-button";
-restart_button.type = "button";
-restart_button.innerText = "Neustarten";
-endscreen_div.appendChild(restart_button);
+addButton("h-access", "new-round-button", "Nächste Runde")
+addButton("endscreen", "restart-button", "Neustarten")
 
 document.getElementById('new-round-button').addEventListener('click', function() {
     const location = getRandomLocation()
@@ -363,5 +360,4 @@ document.getElementById('restart-button').addEventListener('click', function() {
 })
 
 await getJSON().then(data => locationsJSON = data);
-
 };

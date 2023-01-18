@@ -45,20 +45,6 @@ function updatePlayerList(playerNames, snapshot) {
     });
 }
 
-onValue(refPlayers, (snapshot) => {
-    if (snapshot.exists() && isHost == undefined) {isHost = snapshot.val().isHost} else {isHost = false};
-
-    if ((!Object.keys(snapshot.val()).includes(playerName)) && (unloading == false)) {
-        set(refPlayer, {
-            isHost: false,
-            score: 0,
-            guess: {hasGuessed: false, lat: 0, lng: 0}
-    })};
-
-    if (!unloading) {
-    updatePlayerList(Object.keys(snapshot.val()), snapshot.val())};
-});
-
 onValue(ref(db, 'bingguesser'), (snapshot) => {
     if (snapshot.exists()) {
     if ((snapshot.val()[gameid].round > 0) && (!Object.keys(snapshot.val()[gameid].player).includes(playerName))) { // game started?
@@ -74,6 +60,20 @@ onValue(ref(db, 'bingguesser'), (snapshot) => {
     }
 });
 
+onValue(refPlayers, (snapshot) => {
+    if (!unloading) {
+    if (snapshot.exists() && isHost == undefined) {isHost = snapshot.val().isHost} else {isHost = false};
+
+    if (!Object.keys(snapshot.val()).includes(playerName)) {
+        set(refPlayer, {
+            isHost: false,
+            score: 0,
+            guess: {hasGuessed: false, lat: 0, lng: 0}
+    })};
+
+    updatePlayerList(Object.keys(snapshot.val()), snapshot.val())};
+});
+
 function onunload () {
     unloading = true
     if (isHost) {
@@ -82,4 +82,4 @@ function onunload () {
     set(refPlayer, {})}
 };
 
-window.onunload = onunload;
+// window.onunload = onunload;
