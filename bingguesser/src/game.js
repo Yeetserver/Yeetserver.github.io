@@ -1,49 +1,11 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.12.1/firebase-app.js';
 import { getAuth } from 'https://www.gstatic.com/firebasejs/9.12.1/firebase-auth.js';
 import { getDatabase, ref, onValue, set, child, get, push, update } from 'https://www.gstatic.com/firebasejs/9.12.1/firebase-database.js';
+import { firebaseConfig, getDistance, getJSON, getRandomFloat, getCookie, addButton } from './game_dependency.js';
 
 const gameid = window.location.search
-
-function getCookie(cname) {
-    let name = cname + "=";
-    let decodedCookie = decodeURIComponent(document.cookie);
-    let ca = decodedCookie.split(';');
-    for (let i = 0; i <ca.length; i++) {
-    let c = ca[i];
-    while (c.charAt(0) == ' ') {
-      c = c.substring(1);
-    }
-    if (c.indexOf(name) == 0) {
-      return c.substring(name.length, c.length);
-    }}
-    return "";
-};
-
-function getRandomFloat () {
-    if (Math.random() > 0.5) {return Math.random()/10}
-    else {return -(Math.random()/10)};
-};
-
-function getDistance(lat1, lon1, lat2, lon2) {
-    const R = 6371;
-    const deg2rad = deg => deg * (Math.PI / 180);
-    const dLat = deg2rad(lat2 - lat1);
-    const dLon = deg2rad(lon2 - lon1);
-    const a = Math.sin(dLat / 2) ** 2 + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon / 2) ** 2;
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c;
-};
-
-async function getJSON() {
-    try {
-      const response = await fetch('/bingguesser/src/locations.json');
-      return response.json();
-    } catch (error) {
-      console.error(error);
-}}
-
 const playerName = getCookie("username")
-const firebaseConfig = JSON.parse(document.getElementById("key").innerHTML)
+
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase();
@@ -83,26 +45,23 @@ async function timeProcessor (inptime) {
     if (time < 1) {
         clearInterval(timerInterval);
         document.getElementById("timer-display").innerHTML = 'Verbleibende Zeit: 0:00';
-        if (!hasGuessed || !roundOver) {
-            timeRanOut = true
+        if (!hasGuessed && !roundOver) {
             userClicked = {lat: 0, lng: 0};
-            guess();
-            timeRanOut = false
+            set(refPlayerGuess, {hasGuessed: true, lat: 0, lng: 0})
         }
     }
 }
 
 function guess() {
     if (userClicked.lat == undefined && userClicked.lng == undefined) {userClicked = {lat: 0, lng: 0}}
-
-    if ((!roundOver && !timeRanOut) && (userClicked.lat != 0 && userClicked.lng != 0)) {
+    if ((!roundOver) && (userClicked.lat != 0 && userClicked.lng != 0)) {
         if (!hasGuessed) {
             let sound_success = new Audio('/assets/audio/success.mp3');
             sound_success.play()};
         set(refPlayerGuess, {hasGuessed: true, lat: userClicked.lat, lng: userClicked.lng});
         userClicked = {lat: 0, lng: 0};
         hasGuessed = true
-    } else if (!roundOver && timeRanOut) {set(refPlayerGuess, {hasGuessed: true, lat: 0, lng: 0})}
+    } else if (!roundOver) {set(refPlayerGuess, {hasGuessed: true, lat: 0, lng: 0})}
 }
 
 async function setTimer (seconds) {
@@ -145,7 +104,7 @@ function newRound(lat, lng) {
         showDashboard: false,
         enableClickableLogo: false,
         showTermsLink: false,
-        showProblemReporting: false,
+        showProblemReporting: false
     });
     
     street_view = new Microsoft.Maps.Map(document.getElementById('street-view'), {
@@ -292,19 +251,6 @@ onValue(refGame, (snapshot) => {
     };
 });
 
-// buttons
-
-document.getElementById('toggle-map').addEventListener('click', function() {
-    const element = document.getElementById("map");
-    if (element.style.visibility == "hidden") {
-        document.getElementById('toggle-map').innerHTML = "Karte Verstecken";
-        element.style.visibility = "visible";
-    } else {
-        document.getElementById('toggle-map').innerText = "Karte Anzeigen";
-        element.style.visibility = "hidden";
-    }
-});
-
 document.getElementById('guess-button').addEventListener('click', function() {
     guess()
 });
@@ -321,14 +267,7 @@ document.getElementById("game").style.visibility = "visible"
 if (isHost) {
 console.log("You're hosting this game 🚩");
 
-function addButton(div, id, text) {
-    let divElement = document.getElementById(div);
-    let buttonElement = document.createElement(id);
-    buttonElement.type = 'button';
-    buttonElement.id = id;
-    buttonElement.innerText = text;
-    divElement.appendChild(buttonElement);
-}
+
 
 addButton("h-access", "new-round-button", "Nächste Runde")
 addButton("endscreen", "restart-button", "Neustarten")
@@ -358,6 +297,7 @@ document.getElementById('new-round-button').addEventListener('click', function()
 document.getElementById('restart-button').addEventListener('click', function() {
     set(child(refGame, 'round'), 0);
 })
+
 
 await getJSON().then(data => locationsJSON = data);
 };

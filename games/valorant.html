@@ -47,5 +47,319 @@
     <p id="displayText"></p>
 </div>
 
+<script>
+    function randomMap () {
+    const maps = ["Bind", "Haven", "Fracture", "Breeze", "Icebox", "Ascent", "Split", "Pearl"];
+    const random = Math.floor(Math.random() * maps.length);
+    document.getElementById("displayText").innerHTML =
+        `${maps[random]}`;
+}
+
+function randomAgent () {
+    const agents = ["Astra", "Breach", "Brimstone", "Chamber", "Cypher", "Jett", "Kay/O", "Killjoy", "Neon", "Omen",
+    "Phoenix", "Raze", "Reyna", "Sage", "Skye", "Sova", "Viper", "Yoru"];
+    const random = Math.floor(Math.random() * agents.length);
+    document.getElementById("displayText").innerHTML =
+        `${agents[random]}`;
+}
+
+function randomWeapon () {
+    const sidearms = ["Knife", "Classic", "Shorty", "Frenzy", "Ghost", "Sheriff"]
+    const weapons = ["Stinger", "Spectre", "Bucky", "Jugde", "Bulldog", "Guardian", "Phantom", "Vandal", "Marshal", "Operator", "Ares", "Odin"];
+    const random_sidearm = Math.floor(Math.random() * sidearms.length);
+    const random_weapon = Math.floor(Math.random() * weapons.length);
+    if (getCookie("useSidearms") == "false" || getCookie("useSidearms") == "") {
+        document.getElementById("displayText").innerHTML =
+        `${sidearms[random_sidearm]} + ${weapons[random_weapon]}`;
+    }
+    else {
+        document.getElementById("displayText").innerHTML =
+        `${weapons[random_weapon]}`;
+    }
+    
+}
+
+function randomChallenge () {
+
+    var randomChallenges = [];
+    var difficultySymbol = "*"
+    var translatedDifficulty = "Einfach"
+
+    var difficulty = getCookie("difficulty");
+    var count = getCookie("count");
+
+    if (count === "") {count = 1};
+    if (difficulty === "") {difficulty = "easy"};
+
+    function convertDifficulty () {
+        if (difficulty == "easy") {difficultySymbol = "*"; translatedDifficulty = "Einfach";}
+        else if (difficulty == "medium") {difficultySymbol = "⁑"; translatedDifficulty = "Normal";}
+        else if (difficulty == "hard") {difficultySymbol = "⁂"; translatedDifficulty = "Schwer";}}
+    
+    convertDifficulty();
+
+    const challenges = ["Nur das Messer benutzen¹²⁂", "Nur Zweitwaffen benutzen¹*", "Nur Hauptwaffen benutzen¹*", "Keine Waffen aufsammeln²⁶*",
+    `Nur Waffen über ${randomInt(1, 40)*100} ¤ kaufen²⁑`, `Nur Waffen unter ${randomInt(1, 40)*100} ¤ kaufen²⁑`,
+    "Nur aufgesammelte Waffen benutzen²*", "Nur Zweitwaffen aufsammeln²*", "Nicht Springen*", "Nur Schleichen⁴*", "Keine Fähigkeiten einsetzen*",
+    "Campen³⁑", "Pushen³⁑", "Nur Rückwärts laufen⁂", "Nur Crouchen⁴⁑", "Einen Gegner Messern¹²⁑", "Nur Rennen⁴*", "Nur Waffen vom Gegner benutzen¹²⁶⁑",
+    "Nur auf die Füße zielen⁂", "Einmal um die Map laufen³⁂", "Nach A gehen³⁵*", "Nach B gehen³⁵*", "Nach C(A) gehen³⁵*", `Maximal ${randomInt(1, 5)} Gegner töten²⁑`];
+    
+    function duplicateExists (symbol) {if (!randomChallenges.find(a =>a.includes(symbol)) + !randomChallenge.includes(symbol)) {return true} else {return false}}
+    if (challenges.length/2 < count) {count = Math.round(challenges.length/4)}
+
+    for (let i = 1; i <= count; i++) {
+        var random = Math.floor(Math.random() * challenges.length);
+        var randomChallenge = challenges[random];
+        if (!randomChallenges.includes(randomChallenge)) {
+            if (duplicateExists("¹") && duplicateExists("²") && duplicateExists("³") && duplicateExists("⁴") && duplicateExists("⁵") && duplicateExists("⁶")) {
+                if (randomChallenge.includes(difficultySymbol)) {
+                    randomChallenges.push(randomChallenge);
+                }
+                else {
+                    i -= 1;
+                }
+            }
+            else {
+                i -= 1;
+            }
+        }
+        else {
+            i -= 1;
+        }
+    }
+
+    for(var i = 0; i < count; i++) {
+        var item = randomChallenges[i];
+        item = item.replace("¹", "");
+        item = item.replace("²", "");
+        item = item.replace("³", "");
+        item = item.replace("⁴", "");
+        item = item.replace("⁵", "");
+        item = item.replace("⁶", "");
+        item = item.replace("*", "");
+        item = item.replace("⁑", "");
+        item = item.replace("⁂", "");
+        randomChallenges[i] = item;
+    }
+
+    document.getElementById("displayText").innerHTML =
+        `${randomChallenges.join('<br>')}`;
+}
+
+function difficultySlider () {
+    var slider = document.getElementById("difficulty_slider");
+    var difficultyValue = document.getElementById("difficultyValue");
+    if (slider.value == 1) {document.cookie = "difficulty=easy"; var translatedDifficulty = "Einfach";}
+    else if (slider.value == 2) {document.cookie = "difficulty=medium"; var translatedDifficulty = "Normal";}
+    else if (slider.value == 3) {document.cookie = "difficulty=hard"; var translatedDifficulty = "Schwer";}
+    difficultyValue.innerHTML = `Schwierigkeit: ${translatedDifficulty}`
+}
+
+function countSlider () {
+    var slider = document.getElementById("count_slider");
+    var countValue = document.getElementById("countValue");
+    document.cookie = `count=${slider.value}`;
+    countValue.innerHTML = `Anzahl: ${getCookie("count")}`
+}
+
+function useSidearm () {
+    var useSidearm = document.getElementById("use_sidearms");
+    document.cookie = `useSidearms=${useSidearm.checked}`;
+    console.log(getCookie("useSidearms"));
+}
+
+function deleteValorantData () {
+    deleteCookie("count");
+    deleteCookie("difficulty");
+    deleteCookie("useSidearms");
+}
+</script>
+
+<style>
+        * {
+    padding: 0;
+    margin: 0;
+}
+
+.container {
+    color: var(--foreground_appearance);
+    background-color: var(--background_appearance);
+    border-block-start-color: var(--background_appearance);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 12vh;
+}
+
+a {
+    font-size: 1rem;
+    padding: 0.5rem 2rem;
+    text-transform: uppercase;
+}
+
+.btn {
+    text-decoration: none;
+    border: 1px solid rgb(146, 148, 248);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn:hover {
+  box-shadow: 1px 1px 25px 10px rgba(146, 148, 248, 0.4);
+}
+
+.btn:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(146, 148, 248, 0.4),
+        transparent
+    );
+    transition: all 650ms;
+}
+
+.btn:hover:before {
+  left: 100%;
+}
+
+.displayText {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 8vh;
+    margin-top: 25vh;
+    text-align: center;
+}
+
+.slidecontainer p {display: inline; offset-distance: 10px;}
+.slidecontainer .slide_easy {left: 0%;}
+.slidecontainer .slide_medium {left: 50%;}
+.slidecontainer .slide_hard {right: 0%;}
+
+.slidecontainer {
+    position: absolute;
+    top: 72%;
+    left: 2.5%;
+    width: 20%;
+}
+  
+.slidecontainer .containerTitle{
+    display: block;
+    position: relative;
+    padding-left: 0%;
+    margin-bottom: 20px;
+    cursor: pointer;
+    font-size: 30px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 25px;
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+  
+.slider:hover {
+    opacity: 1;
+}
+  
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    background: #04AA6D;
+    cursor: pointer;
+}
+  
+.slider::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    background: #04AA6D;
+    cursor: pointer;
+}
+
+.checkboxClass {
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.checkboxClass input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: #eee;
+}
+
+/* On mouse-over, add a grey background color */
+.checkboxClass:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.checkboxClass input:checked ~ .checkmark {
+  background-color: #2196F3;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.checkboxClass input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.checkboxClass .checkmark:after {
+  left: 9px;
+  top: 5px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+</style>
+
 </body>
 </html>

@@ -16,8 +16,6 @@
     <meta property="og:description" content="Die Offizielle Website des Yeetserver's"/>
     <meta property="og:image" content="https://yeetserver.github.io/assets/images/index-icon.png"/>
     <!-- Website specific contents -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.min.js"></script>
-    <script type="module" src="/src/dependencies/login-required.js"></script>
 </head>
 <body>
 <key id="key" style="display: none;"></key>
@@ -61,39 +59,15 @@ canvas {
 }
 </style>
 
-<script>
-  const acskey = getCookie("acskey")
-  const acskeySpl = acskey.split("?")
-  
-  const acskeyDcr = CryptoJS.AES.decrypt(acskeySpl[1], acskeySpl[0]);
-  const acskeyDcrStr = acskeyDcr.toString(CryptoJS.enc.Utf8);
-  
-  document.getElementById("key").innerHTML = acskeyDcrStr
-</script>
-
 <script defer type="module">
-function getCookie(cname) {
-    let name = cname + '=';
-    let decodedCookie = decodeURIComponent(document.cookie);
-    let ca = decodedCookie.split(';');
-    for (let i = 0; i <ca.length; i++) {
-    let c = ca[i];
-    while (c.charAt(0) == ' ') {
-      c = c.substring(1);
-    }
-    if (c.indexOf(name) == 0) {
-      return c.substring(name.length, c.length);
-    }}
-    return '';
-};
+import { getCookie, firebaseConfig } from '/bingguesser/src/game_dependency.js';
 
 // connect to database
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.12.1/firebase-app.js';
 import { getAuth } from 'https://www.gstatic.com/firebasejs/9.12.1/firebase-auth.js';
 import { getDatabase, ref, onValue, set, child, get } from 'https://www.gstatic.com/firebasejs/9.12.1/firebase-database.js';
 
-const playerName = getCookie("username")
-const firebaseConfig = JSON.parse(document.getElementById("key").innerHTML)
+const playerName = getCookie("username") ? getCookie("username") : "Default";
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase();
@@ -196,12 +170,6 @@ onValue(refGame, (snapshot) => {
   if (canvas_img != canvas.toDataURL()) {
     drawImg(canvas_img);
   }
-});
-
-onValue(refGame, (snapshot) => {
-  if (snapshot.val().enabled != undefined) {
-  if (!snapshot.val().enabled) {window.location.href = `../`}}
-  else {window.location.href = `../`};
 });
 </script>
 </body>

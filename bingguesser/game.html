@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="/src/dependencies/cookies.js"></script>
+    <script src="/dependencies/cookies.js"></script>
     <!-- Titlebar -->
     <link rel="shortcut icon" type="image/x-icon" href="https://cdn-icons-png.flaticon.com/128/3192/3192970.png"/>
     <title>BINGGUESSER</title>
@@ -16,7 +16,6 @@
     <!-- Website specific contents -->
     <script type='text/javascript' src='https://www.bing.com/api/maps/mapcontrol?key=Avk2HmoHkggKijHZuEtFe3viSHJLUSMRN5U-DFineKnojIJkPQ8n2ApVVz2Tit5d&callback=loadMapScenario'></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.min.js"></script>
-    <script type="module" src="/src/dependencies/login-required.js"></script>
     <script defer src="/bingguesser/src/game.js" type="module"></script>
     <script src="/bingguesser/src/player.js" type="module"></script>
     <link rel="stylesheet" href="/bingguesser/src/game.css">
@@ -26,7 +25,18 @@
 
 <div class="streetview-class">
     <div id='street-view'></div>
-    <div id="map" style="visibility: hidden;"></div>
+    
+</div>
+
+
+<div id="map-class">
+    <div id="map"></div>
+    <button id="guess-button">Guess 🗺</button>
+    <button id="center-button">Zurück ♻</button>
+</div>
+
+<div class="menu-div" id="menu-div">
+    <div id="h-access"></div>
 </div>
 
 <a id="mtos" href="https://go.microsoft.com/?linkid=9710837">Microsoft Terms of Service</a>
@@ -41,13 +51,8 @@
     <p id="round-counter">Runde 0/0</p>
 </div>
 
-<div class="menu-div" id="menu-div">
-    <button id="toggle-map">Karte Anzeigen</button>
-    <button id="guess-button">Fertig 🗺</button>
-    <button id="center-button">Zurück ♻</button>
-    <div id="h-access"></div>
-</div>
 
+<!-- Game div -->
 </div>
 
 <div id="endscreen" style="visibility: hidden;">
@@ -57,19 +62,22 @@
     </div>
 </div>
 
-<key id="key" style="display: none;"></key>
-<script>if(window.location.search == ""){window.location.href=`${window.location.hostname}/bingguesser`}</script>
 <script>
-const acskey = getCookie("acskey")
-const acskeySpl = acskey.split("?")
-
-const acskeyDcr = CryptoJS.AES.decrypt(acskeySpl[1], acskeySpl[0]);
-const acskeyDcrStr = acskeyDcr.toString(CryptoJS.enc.Utf8);
-
-document.getElementById("key").innerHTML = acskeyDcrStr
-</script>
-<script defer>
+if(window.location.search == ""){window.location.href=`${window.location.hostname}/bingguesser`}
 document.title = `BINGGUESSER | ${window.location.search}`
 </script>
+
+<script>
+const map = document.querySelector('#map-class');
+
+map.addEventListener('mouseenter', () => {
+  map.style.opacity = 1
+});
+map.addEventListener('mouseleave', () => {
+  map.style.opacity = 0.5
+});
+
+</script>
+
 </body>
 </html>
