@@ -11,7 +11,6 @@ const db = getDatabase();
 
 // global vars
 var unloading = false
-var isHost
 const gameid = window.location.search
 
 // refs
@@ -21,15 +20,19 @@ const refPlayer = ref(db, 'bingguesser/' + gameid + '/player/' + playerName); //
 
 function gameError(message) {
     alert(String(message))
-    window.location.href = window.location.origin + "/bingguesser/"
+    window.location.href = window.location.origin + "/bingguesser/index.html"
 }
 
-function checkPlayer(gameid, username) {
-    let ref = ref(db, 'bingguesser/?'+gameid);
-    if (!username) window.location.href = 'login.html';
-    else get(ref).then(snap => {
-    if (snap.val()[username]) window.location.href = 'game.html';
-    else { set(ref.push(), {username, guesses:0, failures:0, points:0}); window.location.href = 'game.html'; } }) }
+async function getData(reference, element) {
+    return new Promise((resolve) => {
+        get(child(reference, element)).then((snapshot) => {
+            if (snapshot.exists()) {
+            resolve(snapshot.val());
+            } else {resolve(false);}
+        });
+})};
+
+const isHost = await getData(refPlayer, 'isHost');
 
 function updatePlayerList(playerNames, snapshot) {
     const playerList = document.getElementById('player-list');
@@ -59,8 +62,6 @@ onValue(ref(db, 'bingguesser'), (snapshot) => {
 
 onValue(refPlayers, (snapshot) => {
     if (!unloading) {
-    if (snapshot.exists() && isHost == undefined) {isHost = snapshot.val().isHost} else {isHost = false};
-
     if (!Object.keys(snapshot.val()).includes(playerName)) {
         set(refPlayer, {
             isHost: false,
@@ -79,4 +80,4 @@ function onunload () {
     set(refPlayer, {})}
 };
 
-window.onunload = onunload;
+// window.onunload = onunload;

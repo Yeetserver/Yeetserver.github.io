@@ -86,7 +86,7 @@ button:active {
     transform: translate(30%, -50%);
 }
 
-#toggle-map,  #new-round-button, #restart-button {
+#toggle-map,  #new-round-button, #restart-button, #copy-link-button {
     font-family: Arial, Helvetica, sans-serif;
     display: inline-block;
     padding: 10px 20px;
@@ -96,6 +96,11 @@ button:active {
     color: white;
     font-size: medium;
     cursor: pointer;
+}
+
+#copy-link-button {
+    padding: 10px 1px;
+    font-size: xx-small;
 }
 
 /* Player display */
@@ -147,8 +152,8 @@ button:active {
     user-select: none;
     font-size: xx-small;
     position: absolute;
-    top: 98%;
-    left: 0.5%;
+    top: 98vh;
+    left: 0.5vw;
     display: flex;
 }
 

@@ -4,7 +4,6 @@ import { getDatabase, ref, onValue, set, child, get } from 'https://www.gstatic.
 import { firebaseConfig } from './game_dependency.js';
 
 var username = document.getElementById("username").value
-var id = document.getElementById("gameid").value;
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -34,18 +33,18 @@ document.getElementById('host-button').addEventListener('click', function() {
 })
 
 document.getElementById('join-button').addEventListener('click', function() {
-  
-  
+  let id = document.getElementById("gameid").value;
+  console.log(id)
   if (username == "") {invaildUsername(); return}
   if (!id) {invaildGameID()}
   if (id.includes("?")) {id = id.replace("?", "")}
-
+  console.log(id)
   get(ref(db, 'bingguesser')).then(snapshot => {
-
     if (!snapshot.exists()) {invaildGameID(); return};
     if (!Object.keys(snapshot.val()).includes(`?${id}`)) {invaildGameID(); return};
-    window.location.href = `${window.location.origin}/bingguesser/game.html?${id}`;
-  
+    let redirectURL = `${window.location.origin}/bingguesser/game.html?${id}`;
+    window.location.href = redirectURL
+    console.log(redirectURL)
   }).catch(error => {invaildGameID(); return});
 });
 

@@ -34,6 +34,11 @@ var timerInterval
 // async functions
 
 
+function playSound(path) {
+    let sound = new Audio(String(path));
+    sound.play();
+}
+
 async function timeProcessor (inptime) {
     let time = Number(inptime)
 
@@ -42,6 +47,9 @@ async function timeProcessor (inptime) {
 
     document.getElementById("timer-display").innerHTML = `Verbleibende Zeit: ${minutes}:${seconds.toString().padStart(2, '0')}`;
 
+    if (time == 10) {
+        playSound('/assets/audio/clock.mp3')
+    }
     if (time < 1) {
         clearInterval(timerInterval);
         document.getElementById("timer-display").innerHTML = 'Verbleibende Zeit: 0:00';
@@ -56,9 +64,8 @@ function guess() {
     if (userClicked.lat == undefined && userClicked.lng == undefined) {userClicked = {lat: 0, lng: 0}}
     if ((!roundOver) && (userClicked.lat != 0 && userClicked.lng != 0)) {
         if (!hasGuessed) {
-            let sound_success = new Audio('/assets/audio/success.mp3');
-            sound_success.play()};
-        set(refPlayerGuess, {hasGuessed: true, lat: userClicked.lat, lng: userClicked.lng});
+            playSound('/assets/audio/success.mp3')
+        set(refPlayerGuess, {hasGuessed: true, lat: userClicked.lat, lng: userClicked.lng})};
         userClicked = {lat: 0, lng: 0};
         hasGuessed = true
     } else if (!roundOver) {set(refPlayerGuess, {hasGuessed: true, lat: 0, lng: 0})}
@@ -166,14 +173,13 @@ onValue(refPlayers, (snapshot) => {
     let players = snapshot.val();
     let allGuessed = Object.values(players).every(player => player.guess.hasGuessed == true);
 
-    if (allGuessed) {
+    if (allGuessed == true) {
         if (Math.round(getDistance(spawn_location.latitude, spawn_location.longitude, userClicked.lat, userClicked.lng)) > 10000 || (userClicked.lat == 0 && userClicked.lng == 0)) {
-            let sound_fail = new Audio('/assets/audio/fail.mp3');
-            sound_fail.play();
+            playSound()
         };
         roundOver = true
         hasGuessed = false
-        map.entities.clear();
+        if (map.entities) {map.entities.clear();}
         addPushpin(spawn_location, "Position", "Gesuchter Ort", "X");
     for (let playerId in players) {
         let player = players[playerId];
@@ -213,9 +219,7 @@ onValue(refGame, (snapshot) => {
         if (round <= maxRounds) {
             const location = snapshot.val().location;
             newRound(location.lat, location.lng)
-
-            let sound_start = new Audio('/assets/audio/start.mp3');
-            sound_start.play();
+            playSound('/assets/audio/start.mp3')
         }
         else {document.getElementById("round-counter").innerText = ``};
     }
@@ -267,9 +271,9 @@ document.getElementById("game").style.visibility = "visible"
 if (isHost) {
 console.log("You're hosting this game 🚩");
 
-
-
 addButton("h-access", "new-round-button", "Nächste Runde")
+addButton("h-access", "copy-link-button", "Link Kopieren")
+
 addButton("endscreen", "restart-button", "Neustarten")
 
 document.getElementById('new-round-button').addEventListener('click', function() {
@@ -298,6 +302,10 @@ document.getElementById('restart-button').addEventListener('click', function() {
     set(child(refGame, 'round'), 0);
 })
 
+document.getElementById('copy-link-button').addEventListener('click', function() {
+    console.log("Copied link to clipboard 📋")
+    navigator.clipboard.writeText(window.location.href)
+})
 
 await getJSON().then(data => locationsJSON = data);
 };
